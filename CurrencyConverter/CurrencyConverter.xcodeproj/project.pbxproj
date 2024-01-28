@@ -46,8 +46,10 @@
 		1E631AB62B5FD48600464EEC /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AB52B5FD48600464EEC /* ScrollView.swift */; };
 		1E631ABA2B5FD66000464EEC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E631ABC2B5FD66000464EEC /* Localizable.strings */; };
 		1E631ABE2B5FD79300464EEC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631ABD2B5FD79300464EEC /* Constants.swift */; };
-		1E631AC02B5FED5F00464EEC /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631ABF2B5FED5F00464EEC /* TextField.swift */; };
 		1E631AC22B5FEF8400464EEC /* NoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AC12B5FEF8400464EEC /* NoResultsView.swift */; };
+		1E631AC42B62A21E00464EEC /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AC32B62A21E00464EEC /* String.swift */; };
+		1E631AC72B62D95100464EEC /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631AC62B62D95100464EEC /* Differentiator */; };
+		1E631AC92B62D95100464EEC /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631AC82B62D95100464EEC /* RxDataSources */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,8 +84,8 @@
 		1E631AB52B5FD48600464EEC /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
 		1E631ABB2B5FD66000464EEC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1E631ABD2B5FD79300464EEC /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = CurrencyConverter/CurrencySelectionScreen/AvailableCurrencyTableViewCell/Constants.swift; sourceTree = SOURCE_ROOT; };
-		1E631ABF2B5FED5F00464EEC /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		1E631AC12B5FEF8400464EEC /* NoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultsView.swift; sourceTree = "<group>"; };
+		1E631AC32B62A21E00464EEC /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,12 +95,14 @@
 			files = (
 				1E631A862B4217FC00464EEC /* XCoordinatorCombine in Frameworks */,
 				1E631A842B4217FC00464EEC /* XCoordinator in Frameworks */,
+				1E631AC72B62D95100464EEC /* Differentiator in Frameworks */,
 				1E631A742B42178800464EEC /* SnapKit in Frameworks */,
 				1E631A792B4217A800464EEC /* RxBlocking in Frameworks */,
 				1E631A812B4217A800464EEC /* RxRelay in Frameworks */,
 				1E631A7D2B4217A800464EEC /* RxCocoa in Frameworks */,
 				1E631A882B4217FC00464EEC /* XCoordinatorRx in Frameworks */,
 				1E631A762B42178800464EEC /* SnapKit-Dynamic in Frameworks */,
+				1E631AC92B62D95100464EEC /* RxDataSources in Frameworks */,
 				1E631A7F2B4217A800464EEC /* RxCocoa-Dynamic in Frameworks */,
 				1E631A7B2B4217A800464EEC /* RxBlocking-Dynamic in Frameworks */,
 			);
@@ -183,6 +187,7 @@
 			isa = PBXGroup;
 			children = (
 				1E631A6F2B4216D100464EEC /* UIColor.swift */,
+				1E631AC32B62A21E00464EEC /* String.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -245,7 +250,6 @@
 			isa = PBXGroup;
 			children = (
 				1E631AB52B5FD48600464EEC /* ScrollView.swift */,
-				1E631ABF2B5FED5F00464EEC /* TextField.swift */,
 			);
 			path = "Reusable UI elements";
 			sourceTree = "<group>";
@@ -277,6 +281,8 @@
 				1E631A832B4217FC00464EEC /* XCoordinator */,
 				1E631A852B4217FC00464EEC /* XCoordinatorCombine */,
 				1E631A872B4217FC00464EEC /* XCoordinatorRx */,
+				1E631AC62B62D95100464EEC /* Differentiator */,
+				1E631AC82B62D95100464EEC /* RxDataSources */,
 			);
 			productName = CurrencyConverter;
 			productReference = 1E631A4A2B4212D600464EEC /* CurrencyConverter.app */;
@@ -310,6 +316,7 @@
 				1E631A722B42178800464EEC /* XCRemoteSwiftPackageReference "SnapKit" */,
 				1E631A772B4217A800464EEC /* XCRemoteSwiftPackageReference "RxSwift" */,
 				1E631A822B4217FC00464EEC /* XCRemoteSwiftPackageReference "XCoordinator" */,
+				1E631AC52B62D95100464EEC /* XCRemoteSwiftPackageReference "RxDataSources" */,
 			);
 			productRefGroup = 1E631A4B2B4212D600464EEC /* Products */;
 			projectDirPath = "";
@@ -345,10 +352,10 @@
 				1E631AC22B5FEF8400464EEC /* NoResultsView.swift in Sources */,
 				1E631AA62B5FC60100464EEC /* CurrencySelectionViewController.swift in Sources */,
 				1E631ABE2B5FD79300464EEC /* Constants.swift in Sources */,
-				1E631AC02B5FED5F00464EEC /* TextField.swift in Sources */,
 				1E631A8C2B42191C00464EEC /* ConverterViewModel.swift in Sources */,
 				1E631AAF2B5FC8AF00464EEC /* AvailableCurrencyCell.swift in Sources */,
 				1E631A6D2B4214DD00464EEC /* Fonts.swift in Sources */,
+				1E631AC42B62A21E00464EEC /* String.swift in Sources */,
 				1E631AA92B5FC63200464EEC /* CurrencySelectionView.swift in Sources */,
 				1E631AA12B559DFF00464EEC /* SelectedCurrencyCellViewModelType.swift in Sources */,
 				1E631A932B47EA5E00464EEC /* ConverterView.swift in Sources */,
@@ -618,6 +625,14 @@
 				minimumVersion = 2.2.1;
 			};
 		};
+		1E631AC52B62D95100464EEC /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -670,6 +685,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E631A822B4217FC00464EEC /* XCRemoteSwiftPackageReference "XCoordinator" */;
 			productName = XCoordinatorRx;
+		};
+		1E631AC62B62D95100464EEC /* Differentiator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E631AC52B62D95100464EEC /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = Differentiator;
+		};
+		1E631AC82B62D95100464EEC /* RxDataSources */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E631AC52B62D95100464EEC /* XCRemoteSwiftPackageReference "RxDataSources" */;
+			productName = RxDataSources;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
