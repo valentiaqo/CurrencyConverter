@@ -19,7 +19,7 @@ final class CurrencySelectionViewModel: CurrencySelectionViewModelType {
     func updateFilteredCurrenciesWithSearchText(_ searchText: String) {
         let searchTextLowercased = searchText.lowercased()
         
-        var currenciesFilteredWithSearchedText: [SectionOfCurrency.Item] = availableCurrencies
+        let currenciesFilteredWithSearchedText: [SectionOfCurrency.Item] = availableCurrencies
             .flatMap { $0.items }
             .filter { $0.fullName.lowercased().contains(searchTextLowercased) || $0.code.lowercased().contains(searchTextLowercased) }
         

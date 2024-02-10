@@ -53,14 +53,16 @@ final class CurrencySelectionViewController: UIViewController {
     
     private func subscribeToSearchBarText() {
         searchController.searchBar.rx.text.orEmpty.scan(String()) { previousText, newText in
+            let maxNumberOfSymbols = 15
+            let regex = NSRegularExpression("^[a-zA-Z]{0,\(maxNumberOfSymbols)}$")
+            
             defer {
-                self.updateNoResultLabel(withText: newText)
-                self.updateCurrenciesList(withText: newText)
+                let textToUpdate = regex.matches(newText) ? newText : previousText
+                self.updateNoResultLabel(withText: textToUpdate)
+                self.updateCurrenciesList(withText: textToUpdate)
             }
             
-            let maxNumberOfSymbols = 15
-            
-            if maxNumberOfSymbols > 0 && newText.count > maxNumberOfSymbols {
+            if newText.count > maxNumberOfSymbols || !regex.matches(newText) {
                 self.searchController.searchBar.text = newText.truncated(to: maxNumberOfSymbols)
                 return previousText
             }
@@ -124,9 +126,9 @@ extension CurrencySelectionViewController {
         return dataSource
     }
     
-        private func bindAvailableCurrenciesToTableView() {
-            viewModel.filteredCurrencies
-                .bind(to: currencySelectionView.availableCurrenciesTableView.rx.items(dataSource: tableViewDataSource()))
-                .disposed(by: disposeBag)
-        }
+    private func bindAvailableCurrenciesToTableView() {
+        viewModel.filteredCurrencies
+            .bind(to: currencySelectionView.availableCurrenciesTableView.rx.items(dataSource: tableViewDataSource()))
+            .disposed(by: disposeBag)
+    }
 }

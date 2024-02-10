@@ -17,6 +17,7 @@ extension String {
         return self
     }
     
+    /// Removes the last character from a string and returns the modified string.
     func withoutLastCharacter() -> String {
         guard !self.isEmpty else {
             return self
