@@ -189,11 +189,5 @@ final class ConverterScreenView: UIView {
         lastUpdateLabel.snp.makeConstraints { make in
             make.height.equalTo(20)
         }
-        
-        
-        
-        
-        
-        
     }
 }

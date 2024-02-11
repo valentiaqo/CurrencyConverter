@@ -26,4 +26,16 @@ extension String {
         let endIndex = self.index(before: self.endIndex)
         return String(self[..<endIndex])
     }
+    
+    /// Determines if a string conforms to a specific regex pattern. It compiles the provided regex pattern and attempts to find a match within the entire string. If a match is found, it returns `true`; otherwise, it returns `false`. If the provided regex pattern is invalid, this method will also return `false`.
+    func isValidWith(regex: String) -> Bool {
+        guard let regex = try? NSRegularExpression(pattern: regex) else { return false }
+        let range = NSRange(location: 0, length: self.utf16.count)
+        
+        if regex.firstMatch(in: self, range: range) != nil {
+            return true
+        }
+        
+        return false
+    }
 }

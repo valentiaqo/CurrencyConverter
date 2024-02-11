@@ -18,7 +18,7 @@ final class ConverterViewModel: ConverterViewModelType {
     var selectedTradingOption: TradingOption = .bid
     
     // TO BE CHANGED
-    let selectedCurrencies: BehaviorRelay<[Currency]> = .init(value: [.usd, .eur, .pln, .usd, .eur, .pln])
+    let selectedCurrencies: BehaviorRelay<[Currency]> = .init(value: [.usd, .eur, .pln])
     // TO BE CHANGED
     
     func cellViewModel(currency: Currency) -> SelectedCurrencyCellViewModelType {

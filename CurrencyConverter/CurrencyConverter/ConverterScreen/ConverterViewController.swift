@@ -60,13 +60,31 @@ final class ConverterViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
+    
+    private func subscribeToAmountTextFieldTextInCell(_ cell: SelectedCurrencyCell) {
+        cell.amountTextField.rx
+            .text
+            .orEmpty
+            .scan(String(), accumulator: { previousText, newText in
+                let numberFormatter = AccountingNumberFormatter()
+                let acceptedText = numberFormatter.applyTextFieldTextFormat(for: cell.amountTextField,
+                                                                            previousText: previousText,
+                                                                            currentText: newText)
+                //                self.viewModel.balance = acceptedText.asDouble() ?? Double()
+                return acceptedText
+            })
+            .bind(to: cell.amountTextField.rx.text)
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - UITableViewDataSource
 extension ConverterViewController {
     private func bindSelectedCurrenciesToTableView() {
-        viewModel.selectedCurrencies.bind(to: converterScreenView.converterView.currenciesTableView.rx.items(cellIdentifier: SelectedCurrencyCell.reuseIdentifier, cellType: SelectedCurrencyCell.self)) { [weak self] row, currency, cell in
+        viewModel.selectedCurrencies.bind(to: converterScreenView.converterView.currenciesTableView.rx.items(cellIdentifier: SelectedCurrencyCell.reuseIdentifier, 
+                                                                                                             cellType: SelectedCurrencyCell.self)) { [weak self] row, currency, cell in
             cell.viewModel = self?.viewModel.cellViewModel(currency: currency)
+            self?.subscribeToAmountTextFieldTextInCell(cell)
         }
         .disposed(by: disposeBag)
     }
@@ -75,20 +93,20 @@ extension ConverterViewController {
 // MARK: NotificationCenter Subscriptions
 extension ConverterViewController {
     private func addRxObservers() {
-         NotificationCenter.default.rx
+        NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
-             .subscribe(onNext: { notification in
-                 self.toggleScrollViewContentOffset(notification: notification)
-             })
-             .disposed(by: disposeBag)
-
-         NotificationCenter.default.rx
+            .subscribe(onNext: { notification in
+                self.toggleScrollViewContentOffset(notification: notification)
+            })
+            .disposed(by: disposeBag)
+        
+        NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
-             .subscribe(onNext: { notification in
-                 self.toggleScrollViewContentOffset(notification: notification)
-             })
-             .disposed(by: disposeBag)
-     }
+            .subscribe(onNext: { notification in
+                self.toggleScrollViewContentOffset(notification: notification)
+            })
+            .disposed(by: disposeBag)
+    }
     
     private func toggleScrollViewContentOffset(notification: Notification) {
         guard let userInfo = notification.userInfo as? [String: Any],

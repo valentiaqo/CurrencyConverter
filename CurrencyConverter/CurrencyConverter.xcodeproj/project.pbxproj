@@ -50,7 +50,7 @@
 		1E631AC42B62A21E00464EEC /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AC32B62A21E00464EEC /* String.swift */; };
 		1E631AC72B62D95100464EEC /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631AC62B62D95100464EEC /* Differentiator */; };
 		1E631AC92B62D95100464EEC /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631AC82B62D95100464EEC /* RxDataSources */; };
-		1E631ACC2B77AF0700464EEC /* NSRegularExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631ACB2B77AF0700464EEC /* NSRegularExpression.swift */; };
+		1E631ACE2B77BF3400464EEC /* AccountingNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631ACD2B77BF3400464EEC /* AccountingNumberFormatter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,7 +87,7 @@
 		1E631ABD2B5FD79300464EEC /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = CurrencyConverter/CurrencySelectionScreen/AvailableCurrencyTableViewCell/Constants.swift; sourceTree = SOURCE_ROOT; };
 		1E631AC12B5FEF8400464EEC /* NoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultsView.swift; sourceTree = "<group>"; };
 		1E631AC32B62A21E00464EEC /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		1E631ACB2B77AF0700464EEC /* NSRegularExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSRegularExpression.swift; sourceTree = "<group>"; };
+		1E631ACD2B77BF3400464EEC /* AccountingNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountingNumberFormatter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,8 +139,9 @@
 				1E631AB72B5FD49400464EEC /* Reusable UI elements */,
 				1E631AA42B5D3BB700464EEC /* Models */,
 				1E631A712B4216EE00464EEC /* Extensions */,
-				1E631A6E2B4214E900464EEC /* Resourses */,
+				1E631ACF2B77BF3B00464EEC /* Utility */,
 				1E631A612B42148000464EEC /* Supporting Files */,
+				1E631A6E2B4214E900464EEC /* Resourses */,
 			);
 			path = CurrencyConverter;
 			sourceTree = "<group>";
@@ -190,7 +191,6 @@
 			children = (
 				1E631A6F2B4216D100464EEC /* UIColor.swift */,
 				1E631AC32B62A21E00464EEC /* String.swift */,
-				1E631ACB2B77AF0700464EEC /* NSRegularExpression.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -255,6 +255,14 @@
 				1E631AB52B5FD48600464EEC /* ScrollView.swift */,
 			);
 			path = "Reusable UI elements";
+			sourceTree = "<group>";
+		};
+		1E631ACF2B77BF3B00464EEC /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				1E631ACD2B77BF3400464EEC /* AccountingNumberFormatter.swift */,
+			);
+			path = Utility;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -364,6 +372,7 @@
 				1E631A932B47EA5E00464EEC /* ConverterView.swift in Sources */,
 				1E631A8A2B42190600464EEC /* ConverterScreenView.swift in Sources */,
 				1E631AB62B5FD48600464EEC /* ScrollView.swift in Sources */,
+				1E631ACE2B77BF3400464EEC /* AccountingNumberFormatter.swift in Sources */,
 				1E631AAD2B5FC72900464EEC /* CurrencySelectionViewModelType.swift in Sources */,
 				1E631AA32B5D3BB100464EEC /* Currency.swift in Sources */,
 				1E631AB42B5FC90300464EEC /* AvailableCurrencyCellViewModelType.swift in Sources */,
@@ -375,7 +384,6 @@
 				1E631A9B2B559B1500464EEC /* SelectedCurrencyCell.swift in Sources */,
 				1E631AAB2B5FC72100464EEC /* CurrencySelectionViewModel.swift in Sources */,
 				1E631A8E2B42192900464EEC /* ConverterViewModelType.swift in Sources */,
-				1E631ACC2B77AF0700464EEC /* NSRegularExpression.swift in Sources */,
 				1E631A9F2B559DF700464EEC /* SelectedCurrencyCellViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

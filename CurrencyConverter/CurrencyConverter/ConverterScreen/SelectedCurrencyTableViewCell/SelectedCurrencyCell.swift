@@ -16,7 +16,7 @@ final class SelectedCurrencyCell: UITableViewCell {
     let rightChevronImageView = UIImageView()
     let currencyCodeStackView = UIStackView()
     
-    let valueTextField = UITextField()
+    let amountTextField = UITextField()
     
     private let disposeBag = DisposeBag()
     
@@ -60,9 +60,9 @@ final class SelectedCurrencyCell: UITableViewCell {
         rightChevronImageView.tintColor = .midnightBlue
         
         // valueTextField
-        valueTextField.borderStyle = .roundedRect
-        valueTextField.layer.cornerRadius = 10
-        valueTextField.backgroundColor = .cloudWhite
+        amountTextField.borderStyle = .roundedRect
+        amountTextField.layer.cornerRadius = 10
+        amountTextField.backgroundColor = .cloudWhite
     }
     
     private func setUpCurrencyCodeStackView() {
@@ -76,7 +76,7 @@ final class SelectedCurrencyCell: UITableViewCell {
     
     private func addSubviews() {
         addSubview(currencyCodeStackView)
-        addSubview(valueTextField)
+        addSubview(amountTextField)
     }
     
     private func addConstraints() {
@@ -97,7 +97,7 @@ final class SelectedCurrencyCell: UITableViewCell {
         }
         
         // valueTextField
-        valueTextField.snp.makeConstraints { make in
+        amountTextField.snp.makeConstraints { make in
             make.leading.equalTo(currencyCodeStackView.snp.trailing).offset(64)
             make.centerY.equalToSuperview()
             make.height.equalTo(40)

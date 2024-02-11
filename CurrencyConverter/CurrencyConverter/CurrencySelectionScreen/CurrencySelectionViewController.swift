@@ -54,15 +54,14 @@ final class CurrencySelectionViewController: UIViewController {
     private func subscribeToSearchBarText() {
         searchController.searchBar.rx.text.orEmpty.scan(String()) { previousText, newText in
             let maxNumberOfSymbols = 15
-            let regex = NSRegularExpression("^[a-zA-Z]{0,\(maxNumberOfSymbols)}$")
             
             defer {
-                let textToUpdate = regex.matches(newText) ? newText : previousText
+                let textToUpdate = newText.isValidWith(regex: RegexPattern.onlyAlphaSymbols) ? newText : previousText
                 self.updateNoResultLabel(withText: textToUpdate)
                 self.updateCurrenciesList(withText: textToUpdate)
             }
             
-            if newText.count > maxNumberOfSymbols || !regex.matches(newText) {
+            if newText.count > maxNumberOfSymbols || !newText.isValidWith(regex: RegexPattern.onlyAlphaSymbols) {
                 self.searchController.searchBar.text = newText.truncated(to: maxNumberOfSymbols)
                 return previousText
             }
