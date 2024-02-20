@@ -13,6 +13,8 @@ final class ConverterViewController: UIViewController {
     let viewModel: ConverterViewModelType
     let converterScreenView = ConverterScreenView()
     
+    let currencyNetworkManager: CurrencyNetworkManagerType = CurrencyNetworkManager()
+    
     let disposeBag = DisposeBag()
     
     // MARK: - Inits
@@ -34,8 +36,17 @@ final class ConverterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         subscribeToTradeButtonsTapped()
+        subscribeToDoneButtonTapped()
         bindSelectedCurrenciesToTableView()
         addRxObservers()
+        subscribeToLongPressGesture()
+        subscribeToCurrenciesTableViewItemMoved()
+        subscribeToCurrenciesTableViewItemDeleted()
+
+        
+        //        Task {
+        //            await currencyNetworkManager.fetchCurrentCurrenciesRates()
+        //        }
     }
     
     override func viewWillLayoutSubviews() {
@@ -61,7 +72,20 @@ final class ConverterViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func subscribeToAmountTextFieldTextInCell(_ cell: SelectedCurrencyCell) {
+    private func subscribeToDoneButtonTapped() {
+        converterScreenView.converterView.doneButton.rx
+            .tap
+            .subscribe { [weak self] _ in
+                self?.converterScreenView.converterView.swapAddAndTradeButtonsVisability()
+                self?.converterScreenView.converterView.currenciesTableView.setEditing(false, animated: false)
+                self?.converterScreenView.converterView.currenciesTableView.visibleCells.forEach { cell in
+                    (cell as? SelectedCurrencyCell)?.animateCurrencyCodeConstraintsWithGesture(.ended)
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToAmountTextFieldTextIn(_ cell: SelectedCurrencyCell) {
         cell.amountTextField.rx
             .text
             .orEmpty
@@ -70,10 +94,44 @@ final class ConverterViewController: UIViewController {
                 let acceptedText = numberFormatter.applyTextFieldTextFormat(for: cell.amountTextField,
                                                                             previousText: previousText,
                                                                             currentText: newText)
-                //                self.viewModel.balance = acceptedText.asDouble() ?? Double()
                 return acceptedText
             })
             .bind(to: cell.amountTextField.rx.text)
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToLongPressGesture() {
+        converterScreenView.converterView.longPressGesture.rx
+            .event
+            .subscribe(onNext: { [weak self] gesture in
+                switch gesture.state {
+                case .began:
+                    self?.converterScreenView.converterView.currenciesTableView.setEditing(true, animated: true)
+                    self?.converterScreenView.converterView.currenciesTableView.visibleCells.forEach { cell in
+                        (cell as? SelectedCurrencyCell)?.animateCurrencyCodeConstraintsWithGesture(.began)
+                    }
+                    self?.converterScreenView.converterView.swapAddAndTradeButtonsVisability()
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToCurrenciesTableViewItemMoved() {
+        converterScreenView.converterView.currenciesTableView.rx.itemMoved.subscribe { sourceIndexPath, destinationIndexPath in
+            self.viewModel.rearrangeDraggedCurrencyPosition(sourceIndexPath: sourceIndexPath,
+                                                            destinationIndexPath: destinationIndexPath)
+        }
+        .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToCurrenciesTableViewItemDeleted() {
+        converterScreenView.converterView.currenciesTableView.rx
+            .itemDeleted
+            .subscribe { indexPath in
+                self.viewModel.deleteCurrency(at: indexPath)
+            }
             .disposed(by: disposeBag)
     }
 }
@@ -81,10 +139,10 @@ final class ConverterViewController: UIViewController {
 // MARK: - UITableViewDataSource
 extension ConverterViewController {
     private func bindSelectedCurrenciesToTableView() {
-        viewModel.selectedCurrencies.bind(to: converterScreenView.converterView.currenciesTableView.rx.items(cellIdentifier: SelectedCurrencyCell.reuseIdentifier, 
+        viewModel.selectedCurrencies.bind(to: converterScreenView.converterView.currenciesTableView.rx.items(cellIdentifier: SelectedCurrencyCell.reuseIdentifier,
                                                                                                              cellType: SelectedCurrencyCell.self)) { [weak self] row, currency, cell in
             cell.viewModel = self?.viewModel.cellViewModel(currency: currency)
-            self?.subscribeToAmountTextFieldTextInCell(cell)
+            self?.subscribeToAmountTextFieldTextIn(cell)
         }
         .disposed(by: disposeBag)
     }

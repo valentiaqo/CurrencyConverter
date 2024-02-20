@@ -10,7 +10,6 @@ import SnapKit
 
 final class ConverterScreenView: UIView {
     let scrollView = ScrollView()
-    private let tapRecognizer = UITapGestureRecognizer()
     
     let ovalLayeredView = UIView()
     let titleLabel = UILabel()
@@ -25,7 +24,6 @@ final class ConverterScreenView: UIView {
         super.init(frame: frame)
         backgroundColor = .cloudWhite
         setUpScrollView()
-        setUpTapRecognizer()
         addSubviews()
         addConstraints()
         setUpTitlelabel()
@@ -45,15 +43,6 @@ final class ConverterScreenView: UIView {
     private func setUpScrollView() {
         scrollView.delaysContentTouches = false
         scrollView.showsVerticalScrollIndicator = false
-    }
-    
-    private func setUpTapRecognizer() {
-        scrollView.addGestureRecognizer(tapRecognizer)
-        tapRecognizer.addTarget(self, action: #selector(didTapScrollView))
-    }
-    
-    @objc private func didTapScrollView() {
-        endEditing(true)
     }
     
     private func setUpOvalLayeredView() {

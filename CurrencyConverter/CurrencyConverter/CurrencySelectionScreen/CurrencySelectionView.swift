@@ -47,7 +47,8 @@ final class CurrencySelectionView: UIView {
         
         // noResultsView
         noResultsView.snp.makeConstraints { make in
-            make.centerX.centerY.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(200)
         }
     }
 }

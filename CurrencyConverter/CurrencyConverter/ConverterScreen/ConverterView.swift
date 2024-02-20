@@ -19,18 +19,24 @@ final class ConverterView: UIView {
     let currenciesTableView = UITableView(frame: .zero, style: .plain)
     
     let addCurrencyButton = UIButton()
-    
+    let doneButton = UIButton()
     let shareButton = UIButton()
+    
+    let longPressGesture = UILongPressGestureRecognizer()
     
     //MARK: - Inits
     override init(frame: CGRect) {
         super.init(frame: frame)
+        addGestureRecognizer(longPressGesture)
+        
         setUpView()
         setUpTradeButtons()
         setUpTradeButtonsHStack()
         setUpTradeButtonsContainerView()
+        configureButtonsStackSpacing()
         setUpCurrenciesTableView()
         setUpAddCurrencyButton()
+        setUpDoneButton()
         setUpShareButton()
         addSubviews()
         addConstraints()
@@ -43,21 +49,20 @@ final class ConverterView: UIView {
     // MARK: - Layout
     override func layoutSubviews() {
         super.layoutSubviews()
-        configureUIWhenTraitCollectionChanges()
-        updateLayerWhenTraitCollectionChanges()
-        updateCurrentConstraints()
-    }
-    
-    override var frame: CGRect {
-        didSet {
-            updateLayerWhenTraitCollectionChanges()
-        }
+        updateButtonLayer()
     }
     
     override var bounds: CGRect {
         didSet {
             dropShadow()
         }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        configureButtonsStackSpacing()
+        updateButtonLayer()
+        updateCurrentConstraints()
     }
     
     // MARK: - Subviews' setup
@@ -122,10 +127,17 @@ final class ConverterView: UIView {
         addCurrencyButton.configuration = config
     }
     
+    private func setUpDoneButton() {
+        doneButton.setTitle("Done", for: .normal)
+        doneButton.setTitleColor(.dodgerBlue, for: .normal)
+        
+        doneButton.isHidden = true
+    }
+    
     private func setUpShareButton() {
         var config = UIButton.Configuration.plain()
         config.baseForegroundColor = .gray
-
+        
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .regular)
         let image = UIImage(systemName: "square.and.arrow.up", withConfiguration: imageConfig)
         config.image = image
@@ -136,7 +148,6 @@ final class ConverterView: UIView {
     // MARK: - Layer Setup
     func animateLayerMotion(x: CGFloat) {
         var xCoordinate: CGFloat = 0
-        
         UIView.animate(withDuration: 0.25) {
             if x == 0 {
                 self.tradeButtonsLayer.frame = CGRect(x: x, y: 0, width: self.calculateLayerWidth(), height: 50)
@@ -153,7 +164,7 @@ final class ConverterView: UIView {
                 self.tradeButtonsLayer.frame = CGRect(x: xCoordinate, y: 0, width: self.calculateLayerWidth(), height: 50)
             }
         }
-                                                    
+        
         tradeButtonsLayerViewFrameXCoordinate = xCoordinate
     }
     
@@ -161,7 +172,7 @@ final class ConverterView: UIView {
         var width: CGFloat = 0
         
         switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
-        // frame.width - leading+trailing constaraint - stackView) / 2
+            // frame.width - leading+trailing constaraint - stackView) / 2
         case (.compact, .regular):
             width = (frame.width - 32 - 32) / 2
         case (.regular, .compact):
@@ -176,7 +187,7 @@ final class ConverterView: UIView {
         return width
     }
     
-    private func configureUIWhenTraitCollectionChanges() {
+    private func configureButtonsStackSpacing() {
         var tradeButtonsStackSpacing = tradeButtonsHStack.spacing
         
         switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
@@ -192,7 +203,7 @@ final class ConverterView: UIView {
         tradeButtonsHStack.spacing = tradeButtonsStackSpacing
     }
     
-    private func updateLayerWhenTraitCollectionChanges() {
+    private func updateButtonLayer() {
         tradeButtonsLayer.frame = CGRect(x: tradeButtonsLayerViewFrameXCoordinate, y: 0, width: calculateLayerWidth(), height: 50)
         if tradeButtonsLayerViewFrameXCoordinate == 0 {
             animateLayerMotion(x: 0)
@@ -212,12 +223,20 @@ final class ConverterView: UIView {
         layer.shadowPath = CGPath(rect: CGRect(x: 0, y: 10, width: frame.width, height: frame.height - 5), transform: nil)
     }
     
+    func swapAddAndTradeButtonsVisability() {
+        UIView.animate(withDuration: 0.3) {
+            self.doneButton.isHidden.toggle()
+            self.addCurrencyButton.isHidden.toggle()
+        }
+    }
+    
     // MARK: - Constraints
     private func addSubviews() {
         addSubview(tradeButtonsContainerView)
         tradeButtonsContainerView.addSubview(tradeButtonsHStack)
         addSubview(currenciesTableView)
         addSubview(addCurrencyButton)
+        addSubview(doneButton)
         addSubview(shareButton)
     }
     
@@ -234,6 +253,7 @@ final class ConverterView: UIView {
         tradeButtonsContainerView.snp.makeConstraints { make in
             make.height.equalTo(50)
             make.top.equalToSuperview().inset(16)
+            
             switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
             case (.compact, .regular):
                 make.leading.trailing.equalToSuperview().inset(16)
@@ -253,10 +273,14 @@ final class ConverterView: UIView {
             make.top.equalTo(tradeButtonsContainerView.snp.bottom).offset(16)
             make.bottom.equalToSuperview().inset(64)
             make.leading.trailing.equalToSuperview()
-
         }
         
         addCurrencyButton.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(currenciesTableView.snp.bottom)
+        }
+        
+        doneButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(currenciesTableView.snp.bottom)
         }

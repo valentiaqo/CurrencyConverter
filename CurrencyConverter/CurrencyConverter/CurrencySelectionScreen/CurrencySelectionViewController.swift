@@ -89,7 +89,7 @@ final class CurrencySelectionViewController: UIViewController {
     }
     
     private func toggleNoResultsView() {
-        let filteredCurrenciesIsEmpty = viewModel.filteredCurrencies.value.isEmpty
+        guard let filteredCurrenciesIsEmpty = viewModel.filteredCurrencies.value.first?.items.isEmpty else { return }
         currencySelectionView.noResultsView.isHidden = !filteredCurrenciesIsEmpty
     }
     

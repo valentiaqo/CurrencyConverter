@@ -74,9 +74,35 @@ final class SelectedCurrencyCell: UITableViewCell {
         currencyCodeStackView.spacing = 0
     }
     
+    // MARK: - Constraints
     private func addSubviews() {
         addSubview(currencyCodeStackView)
         addSubview(amountTextField)
+    }
+    
+    func animateCurrencyCodeConstraintsWithGesture(_ gesture: UILongPressGestureRecognizer.State) {
+        UIView.animate(withDuration: 0.3) {
+            switch gesture {
+            case .began:
+                self.currencyCodeStackView.snp.updateConstraints { make in
+                    make.leading.equalToSuperview().inset(64)
+                }
+                
+                self.amountTextField.snp.updateConstraints { make in
+                    make.trailing.equalToSuperview().inset(64)
+                }
+                self.layoutIfNeeded()
+            case .ended:
+                self.currencyCodeStackView.snp.updateConstraints { make in
+                    make.leading.equalToSuperview().inset(32)
+                }
+                self.amountTextField.snp.updateConstraints { make in
+                    make.trailing.equalToSuperview().inset(32)
+                }
+            default: break
+            }
+            
+        }
     }
     
     private func addConstraints() {
