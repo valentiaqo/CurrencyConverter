@@ -38,7 +38,7 @@ final class ConverterViewController: UIViewController {
         subscribeToTradeButtonsTapped()
         subscribeToDoneButtonTapped()
         bindSelectedCurrenciesToTableView()
-        addRxObservers()
+        addKeyboardNotificationRxObservers()
         subscribeToLongPressGesture()
         subscribeToCurrenciesTableViewItemMoved()
         subscribeToCurrenciesTableViewItemDeleted()
@@ -150,7 +150,7 @@ extension ConverterViewController {
 
 // MARK: NotificationCenter Subscriptions
 extension ConverterViewController {
-    private func addRxObservers() {
+    private func addKeyboardNotificationRxObservers() {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
             .subscribe(onNext: { notification in
@@ -173,14 +173,28 @@ extension ConverterViewController {
         
         let contentHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y + converterScreenView.lastTimeUpdatedVStack.frame.height
         let scrollViewHeight = converterScreenView.scrollView.frame.height
-        let bottomViewsGapHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y - converterScreenView.converterView.frame.origin.y - converterScreenView.converterView.frame.height
-        let contentBottomInset =  contentHeight + keyboardHeight + bottomViewsGapHeight - scrollViewHeight
+        let topGapHeight = converterScreenView.converterView.frame.origin.y - converterScreenView.titleLabel.frame.origin.y - converterScreenView.titleLabel.frame.height
+        let bottomGapHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y - converterScreenView.converterView.frame.origin.y - converterScreenView.converterView.frame.height
+        let contentBottomOffset =  contentHeight + (keyboardHeight) + topGapHeight + bottomGapHeight - scrollViewHeight
         
-        if notification.name == UIResponder.keyboardWillShowNotification && contentBottomInset > 0 {
+        if notification.name == UIResponder.keyboardWillShowNotification && contentBottomOffset > 0 {
+            var contentBottomInset: CGFloat = 0
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                let orientation = windowScene.interfaceOrientation
+                if orientation.isPortrait {
+                    switch contentBottomOffset {
+                    case 0...150:
+                        contentBottomInset = 350
+                    default:
+                        contentBottomInset = 230
+                    }
+                }
+            }
+            
             converterScreenView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: contentBottomInset, right: 0)
             converterScreenView.scrollView.scrollIndicatorInsets = converterScreenView.scrollView.contentInset
             UIView.animate(withDuration: 0.5) {
-                self.converterScreenView.scrollView.contentOffset = CGPoint(x: 0, y: contentBottomInset)
+                self.converterScreenView.scrollView.contentOffset = CGPoint(x: 0, y: contentBottomOffset)
             }
         } else if notification.name == UIResponder.keyboardWillHideNotification {
             converterScreenView.scrollView.contentInset = .zero
