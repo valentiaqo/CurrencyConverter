@@ -8,7 +8,56 @@
 
 // MARK: AvailableCurrenciesTableView 
 // Localizable currencies
-"USD" = "United States Dollar";
+"AED" = "United Arab Emirates Dirham";
+"AOA" = "Angolan Kwanza";
+"ARS" = "Argentine Peso";
+"AUD" = "Australian Dollar";
+"BGN" = "Bulgarian Lev";
+"BHD" = "Bahraini Dinar";
+"BRL" = "Brazilian Real";
+"CAD" = "Canadian Dollar";
+"CHF" = "Swiss Franc";
+"CLP" = "Chilean Peso";
+"CNY" = "Chinese Yuan";
+"CNH" = "Chinese Yuan Offshore";
+"COP" = "Colombian Peso";
+"CZK" = "Czech Koruna";
+"DKK" = "Danish Krone";
 "EUR" = "Euro";
+"GBP" = "British Pound Sterling";
+"HKD" = "Hong Kong Dollar";
+"HRK" = "Croatian Kuna";
+"HUF" = "Hungarian Forint";
+"IDR" = "Indonesian Rupiah";
+"ILS" = "Israeli New Shekel";
+"INR" = "Indian Rupee";
+"ISK" = "Icelandic Krona";
+"JPY" = "Japanese Yen";
+"KRW" = "South Korean Won";
+"KWD" = "Kuwaiti Dinar";
+"MAD" = "Moroccan Dirham";
+"MXN" = "Mexican Peso";
+"MYR" = "Malaysian Ringgit";
+"NGN" = "Nigerian Naira";
+"NOK" = "Norwegian Krone";
+"NZD" = "New Zealand Dollar";
+"OMR" = "Omani Rial";
+"PEN" = "Peruvian Nuevo Sol";
+"PHP" = "Philippine Peso";
 "PLN" = "Polish Zloty";
+"RON" = "Romanian Leu";
+"RUB" = "Russian Ruble";
+"SAR" = "Saudi Riyal";
+"SEK" = "Swedish Krona";
+"SGD" = "Singapore Dollar";
+"THB" = "Thai Baht";
+"TRY" = "Turkish Lira";
+"TWD" = "New Taiwan Dollar";
+"USD" = "United States Dollar";
+"VND" = "Vietnamese Dong";
+"XAG" = "Silver (troy ounce)";
+"XAU" = "Gold (troy ounce)";
+"XPD" = "Palladium (troy ounce)";
+"XPT" = "Platinum (troy ounce)";
+"ZAR" = "South African Rand";
 

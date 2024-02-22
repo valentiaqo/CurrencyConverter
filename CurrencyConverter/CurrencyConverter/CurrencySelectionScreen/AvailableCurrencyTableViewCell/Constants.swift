@@ -7,6 +7,8 @@
 
 import Foundation
 
+//let APIKey = "H00QqUfu6XVrEbF7Rq4j"
+
 /// Constants for commonly used character strings and symbols.
 enum CharacterConstants {
     /// Returns a string representing the minus sign

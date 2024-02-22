@@ -9,30 +9,58 @@ import Foundation
 import Differentiator
 
 enum Currency: String, CaseIterable {
-    // LIST TO BE CHANGED
     case aed
+    case aoa
+    case ars
     case aud
+    case bgn
+    case bhd
+    case brl
     case cad
     case chf
+    case clp
     case cny
+    case cnh
+    case cop
     case czk
     case dkk
     case eur
     case gbp
+    case hkd
+    case hrk
+    case huf
+    case idr
     case ils
     case inr
+    case isk
     case jpy
     case krw
-    case kzt
+    case kwd
+    case mad
+    case mxn
+    case myr
+    case ngn
     case nok
+    case nzd
+    case omr
+    case pen
+    case php
     case pln
+    case ron
     case rub
+    case sar
     case sek
+    case sgd
+    case thb
     case `try`
-    case uah
+    case twd
     case usd
+    case vnd
+    case xag
+    case xau
+    case xpd
+    case xpt
     case zar
-    // LIST TO BE CHANGED
     
     var code: String {
         rawValue.uppercased()
@@ -73,3 +101,4 @@ extension SectionOfCurrency: SectionModelType {
         self.items = items
     }
 }
+
