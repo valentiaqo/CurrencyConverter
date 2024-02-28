@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxRelay
+import XCoordinator
 
 enum TradingOption {
     case bid
@@ -15,11 +16,21 @@ enum TradingOption {
 }
 
 final class ConverterViewModel: ConverterViewModelType {
-    var selectedTradingOption: TradingOption = .bid
+    let router: WeakRouter<UserListRoute>
     
+    var selectedTradingOption: TradingOption = .bid
     let selectedCurrencies: BehaviorRelay<[Currency]> = .init(value: [.usd, .eur, .pln])
     
     //    fetchCurrentCurrenciesRates()
+    
+    init(router: WeakRouter<UserListRoute>) {
+        self.router = router
+    }
+    
+    func addCurrencyButtonPressed() {
+        let newCurrencyList = Currency.getNewCurrencyList(basedOn: selectedCurrencies.value)
+        router.trigger(.currencySelection(newCurrencyList))
+    }
     
     func rearrangeDraggedCurrencyPosition(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
         if destinationIndexPath != sourceIndexPath {

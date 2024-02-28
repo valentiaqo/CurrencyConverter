@@ -7,13 +7,18 @@
 
 import Foundation
 import RxRelay
+import XCoordinator
 
 final class CurrencySelectionViewModel: CurrencySelectionViewModelType {
-    let availableCurrencies: [SectionOfCurrency] = Currency.allCurrenciesSorted()
+    let router: WeakRouter<UserListRoute>
+    
+    let availableCurrencies: [SectionOfCurrency]
     var filteredCurrencies: BehaviorRelay<[SectionOfCurrency]>
     
-    init() {
+    init(availableCurrencies: [SectionOfCurrency] = Currency.sortedCurrencies(), router: WeakRouter<UserListRoute>) {
+        self.availableCurrencies = availableCurrencies
         self.filteredCurrencies = .init(value: availableCurrencies)
+        self.router = router
     }
     
     func updateFilteredCurrenciesWithSearchText(_ searchText: String) {

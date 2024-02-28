@@ -42,7 +42,7 @@ final class ConverterViewController: UIViewController {
         subscribeToLongPressGesture()
         subscribeToCurrenciesTableViewItemMoved()
         subscribeToCurrenciesTableViewItemDeleted()
-
+        subscribeToAddCurrencyButtonPressed()
         
         //        Task {
         //            await currencyNetworkManager.fetchCurrentCurrenciesRates()
@@ -134,6 +134,15 @@ final class ConverterViewController: UIViewController {
             }
             .disposed(by: disposeBag)
     }
+    
+    private func subscribeToAddCurrencyButtonPressed() {
+        converterScreenView.converterView.addCurrencyButton.rx
+            .tap
+            .subscribe { [weak self] _ in
+                self?.viewModel.addCurrencyButtonPressed()
+            }
+            .disposed(by: disposeBag)
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -144,7 +153,7 @@ extension ConverterViewController {
             cell.viewModel = self?.viewModel.cellViewModel(currency: currency)
             self?.subscribeToAmountTextFieldTextIn(cell)
         }
-        .disposed(by: disposeBag)
+                                                                                                             .disposed(by: disposeBag)
     }
 }
 
@@ -175,7 +184,7 @@ extension ConverterViewController {
         let scrollViewHeight = converterScreenView.scrollView.frame.height
         let topGapHeight = converterScreenView.converterView.frame.origin.y - converterScreenView.titleLabel.frame.origin.y - converterScreenView.titleLabel.frame.height
         let bottomGapHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y - converterScreenView.converterView.frame.origin.y - converterScreenView.converterView.frame.height
-        let contentBottomOffset =  contentHeight + (keyboardHeight) + topGapHeight + bottomGapHeight - scrollViewHeight
+        let contentBottomOffset =  contentHeight + keyboardHeight + topGapHeight + bottomGapHeight - scrollViewHeight
         
         if notification.name == UIResponder.keyboardWillShowNotification && contentBottomOffset > 0 {
             var contentBottomInset: CGFloat = 0

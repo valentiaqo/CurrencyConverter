@@ -40,9 +40,10 @@ final class CurrencySelectionViewController: UIViewController {
         subscribeToFilteredCurrencies()
         subscribeToScrollViewWillBeginDragging()
         subscribeToSearchBarText()
+        subscribeToCurrenciesTableViewItemSelected()
     }
     
-    // MARK: Subscriptions
+    // MARK: - Subscriptions
     private func subscribeToFilteredCurrencies() {
         viewModel.filteredCurrencies
             .subscribe(onNext: { _ in
@@ -81,7 +82,34 @@ final class CurrencySelectionViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    // MARK: Methods
+    private func subscribeToCurrenciesTableViewItemSelected() {
+        currencySelectionView.availableCurrenciesTableView.rx
+            .itemSelected
+            .subscribe { indexPath in
+                guard let converterViewController = (self.navigationController?.viewControllers.first as? ConverterViewController),
+                      let cell = self.currencySelectionView.availableCurrenciesTableView.cellForRow(at: indexPath) as? AvailableCurrencyCell,
+                      let currencyName = cell.currencyNameLabel.text else { return }
+                
+                var newAvailableCurrencies = self.viewModel.filteredCurrencies.value
+                var newSelectedCurrencies = converterViewController.viewModel.selectedCurrencies.value
+                if let selectedCurrency = Currency.getCurrency(basedOn: currencyName) {
+                    newSelectedCurrencies.append(selectedCurrency)
+                    newAvailableCurrencies.indices.forEach { index in
+                        newAvailableCurrencies[index].items.removeAll { currency in
+                            currency == selectedCurrency
+                        }
+                    }
+                    
+                    self.viewModel.filteredCurrencies.accept(newAvailableCurrencies)
+                    converterViewController.viewModel.selectedCurrencies.accept(newSelectedCurrencies)
+                }
+                
+                self.navigationController?.popViewController(animated: true)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    // MARK: - Methods
     private func setUpSearchController() {
         navigationItem.searchController = searchController
         searchController.searchBar.placeholder = "Search currency"

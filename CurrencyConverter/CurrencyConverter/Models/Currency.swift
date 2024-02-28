@@ -70,8 +70,8 @@ enum Currency: String, CaseIterable {
         NSLocalizedString(code, comment: "Currency name")
     }
     
-    static func allCurrenciesSorted() -> [SectionOfCurrency] {
-        let alphabeticallySortedCurrenciesArray = Currency.allCases.sorted {
+    static func sortedCurrencies(currencies: [Currency] = Currency.allCases) -> [SectionOfCurrency] {
+        let alphabeticallySortedCurrenciesArray = currencies.sorted {
             $0.fullName < $1.fullName
         }
         var alphabeticallySorted2DArray = [SectionOfCurrency(items: [])]
@@ -86,6 +86,15 @@ enum Currency: String, CaseIterable {
             }
         }
         return alphabeticallySorted2DArray
+    }
+    
+    static func getCurrency(basedOn currencyFullName: String) -> Currency? {
+        return allCases.first { $0.code.lowercased().hasPrefix(currencyFullName.prefix(3).lowercased()) }
+    }
+    
+    static func getNewCurrencyList(basedOn currentCurrencies: [Currency]) -> [SectionOfCurrency]  {
+        let currenciesExceptSelected = allCases.filter { !currentCurrencies.contains($0) }
+        return sortedCurrencies(currencies: currenciesExceptSelected)
     }
 }
 

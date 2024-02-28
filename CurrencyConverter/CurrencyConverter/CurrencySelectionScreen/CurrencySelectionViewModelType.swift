@@ -7,8 +7,10 @@
 
 import Foundation
 import RxRelay
+import XCoordinator
 
 protocol CurrencySelectionViewModelType: AnyObject {
+    var router: WeakRouter<UserListRoute> { get }
     var availableCurrencies: [SectionOfCurrency] { get }
     var filteredCurrencies: BehaviorRelay<[SectionOfCurrency]> { get set }
     
