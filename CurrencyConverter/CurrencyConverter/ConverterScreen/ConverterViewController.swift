@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 
 final class ConverterViewController: UIViewController {
     let viewModel: ConverterViewModelType
@@ -35,14 +36,14 @@ final class ConverterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        subscribeToTradeButtonsTapped()
-        subscribeToDoneButtonTapped()
         bindSelectedCurrenciesToTableView()
-        addKeyboardNotificationRxObservers()
-        subscribeToLongPressGesture()
         subscribeToCurrenciesTableViewItemMoved()
         subscribeToCurrenciesTableViewItemDeleted()
-        subscribeToAddCurrencyButtonPressed()
+        addKeyboardNotificationRxObservers()
+        subscribeToLongPressGesture()
+        subscribeToTradeButtonsTapped()
+        subscribeToDoneButtonTapped()
+        subscribeToAddCurrencyButtonTapped()
         
         //        Task {
         //            await currencyNetworkManager.fetchCurrentCurrenciesRates()
@@ -135,7 +136,7 @@ final class ConverterViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func subscribeToAddCurrencyButtonPressed() {
+    private func subscribeToAddCurrencyButtonTapped() {
         converterScreenView.converterView.addCurrencyButton.rx
             .tap
             .subscribe { [weak self] _ in
@@ -147,69 +148,82 @@ final class ConverterViewController: UIViewController {
 
 // MARK: - UITableViewDataSource
 extension ConverterViewController {
-    private func bindSelectedCurrenciesToTableView() {
-        viewModel.selectedCurrencies.bind(to: converterScreenView.converterView.currenciesTableView.rx.items(cellIdentifier: SelectedCurrencyCell.reuseIdentifier,
-                                                                                                             cellType: SelectedCurrencyCell.self)) { [weak self] row, currency, cell in
-            cell.viewModel = self?.viewModel.cellViewModel(currency: currency)
-            self?.subscribeToAmountTextFieldTextIn(cell)
+    private func tableViewDataSource() -> RxTableViewSectionedAnimatedDataSource<SectionOfCurrency> {
+        let dataSource = RxTableViewSectionedAnimatedDataSource<SectionOfCurrency> { [weak self] _, tableView, indexPath, cell in
+            let cell = tableView.dequeueReusableCell(withIdentifier: SelectedCurrencyCell.reuseIdentifier, for: indexPath)
+            guard let self, let currency = try? viewModel.selectedCurrencies.value()[indexPath.section].items[indexPath.row] else { return UITableViewCell() }
+            (cell as? SelectedCurrencyCell)?.viewModel = viewModel.cellViewModel(currency: currency)
+            return cell
+            
+        } canEditRowAtIndexPath: { _, _ in
+            true
+        } canMoveRowAtIndexPath: { _, _ in
+            true
         }
-                                                                                                             .disposed(by: disposeBag)
+
+        return dataSource
+    }
+    
+    private func bindSelectedCurrenciesToTableView() {
+        viewModel.selectedCurrencies
+            .bind(to: converterScreenView.converterView.currenciesTableView.rx.items(dataSource: tableViewDataSource()))
+            .disposed(by: disposeBag)
     }
 }
 
-// MARK: NotificationCenter Subscriptions
+// MARK: - NotificationCenter Subscriptions
 extension ConverterViewController {
     private func addKeyboardNotificationRxObservers() {
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillShowNotification)
             .subscribe(onNext: { notification in
-                self.toggleScrollViewContentOffset(notification: notification)
+                self.converterScreenView.toggleScrollViewContentOffset(notification: notification)
             })
             .disposed(by: disposeBag)
         
         NotificationCenter.default.rx
             .notification(UIResponder.keyboardWillHideNotification)
             .subscribe(onNext: { notification in
-                self.toggleScrollViewContentOffset(notification: notification)
+                self.converterScreenView.toggleScrollViewContentOffset(notification: notification)
             })
             .disposed(by: disposeBag)
     }
     
-    private func toggleScrollViewContentOffset(notification: Notification) {
-        guard let userInfo = notification.userInfo as? [String: Any],
-              let keyboardHeight = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-        else { return }
-        
-        let contentHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y + converterScreenView.lastTimeUpdatedVStack.frame.height
-        let scrollViewHeight = converterScreenView.scrollView.frame.height
-        let topGapHeight = converterScreenView.converterView.frame.origin.y - converterScreenView.titleLabel.frame.origin.y - converterScreenView.titleLabel.frame.height
-        let bottomGapHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y - converterScreenView.converterView.frame.origin.y - converterScreenView.converterView.frame.height
-        let contentBottomOffset =  contentHeight + keyboardHeight + topGapHeight + bottomGapHeight - scrollViewHeight
-        
-        if notification.name == UIResponder.keyboardWillShowNotification && contentBottomOffset > 0 {
-            var contentBottomInset: CGFloat = 0
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-                let orientation = windowScene.interfaceOrientation
-                if orientation.isPortrait {
-                    switch contentBottomOffset {
-                    case 0...150:
-                        contentBottomInset = 350
-                    default:
-                        contentBottomInset = 230
-                    }
-                }
-            }
-            
-            converterScreenView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: contentBottomInset, right: 0)
-            converterScreenView.scrollView.scrollIndicatorInsets = converterScreenView.scrollView.contentInset
-            UIView.animate(withDuration: 0.5) {
-                self.converterScreenView.scrollView.contentOffset = CGPoint(x: 0, y: contentBottomOffset)
-            }
-        } else if notification.name == UIResponder.keyboardWillHideNotification {
-            converterScreenView.scrollView.contentInset = .zero
-            UIView.animate(withDuration: 0.5) {
-                self.converterScreenView.scrollView.contentOffset = .zero
-            }
-        }
-    }
+//    private func toggleScrollViewContentOffset(notification: Notification) {
+//        guard let userInfo = notification.userInfo as? [String: Any],
+//              let keyboardHeight = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
+//        else { return }
+//        
+//        let contentHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y + converterScreenView.lastTimeUpdatedVStack.frame.height
+//        let scrollViewHeight = converterScreenView.scrollView.frame.height
+//        let topGapHeight = converterScreenView.converterView.frame.origin.y - converterScreenView.titleLabel.frame.origin.y - converterScreenView.titleLabel.frame.height
+//        let bottomGapHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y - converterScreenView.converterView.frame.origin.y - converterScreenView.converterView.frame.height
+//        let contentBottomOffset =  contentHeight + keyboardHeight + topGapHeight + bottomGapHeight - scrollViewHeight
+//        
+//        if notification.name == UIResponder.keyboardWillShowNotification && contentBottomOffset > 0 {
+//            var contentBottomInset: CGFloat = 0
+//            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+//                let orientation = windowScene.interfaceOrientation
+//                if orientation.isPortrait {
+//                    switch contentBottomOffset {
+//                    case 0...150:
+//                        contentBottomInset = 350
+//                    default:
+//                        contentBottomInset = 230
+//                    }
+//                }
+//            }
+//            
+//            converterScreenView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: contentBottomInset, right: 0)
+//            converterScreenView.scrollView.scrollIndicatorInsets = converterScreenView.scrollView.contentInset
+//            UIView.animate(withDuration: 0.5) {
+//                self.converterScreenView.scrollView.contentOffset = CGPoint(x: 0, y: contentBottomOffset)
+//            }
+//        } else if notification.name == UIResponder.keyboardWillHideNotification {
+//            converterScreenView.scrollView.contentInset = .zero
+//            UIView.animate(withDuration: 0.5) {
+//                self.converterScreenView.scrollView.contentOffset = .zero
+//            }
+//        }
+//    }
 }

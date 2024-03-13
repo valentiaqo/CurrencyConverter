@@ -91,19 +91,20 @@ final class CurrencySelectionViewController: UIViewController {
                       let currencyName = cell.currencyNameLabel.text else { return }
                 
                 var newAvailableCurrencies = self.viewModel.filteredCurrencies.value
-                var newSelectedCurrencies = converterViewController.viewModel.selectedCurrencies.value
-                if let selectedCurrency = Currency.getCurrency(basedOn: currencyName) {
+
+                if let selectedCurrency = Currency.getCurrency(basedOn: currencyName), 
+                    var newSelectedCurrencies = try? converterViewController.viewModel.selectedCurrencies.value().first?.items {
+                    
                     newSelectedCurrencies.append(selectedCurrency)
+                    
                     newAvailableCurrencies.indices.forEach { index in
-                        newAvailableCurrencies[index].items.removeAll { currency in
-                            currency == selectedCurrency
-                        }
+                        newAvailableCurrencies[index].items.removeAll { $0 == selectedCurrency }
                     }
                     
                     self.viewModel.filteredCurrencies.accept(newAvailableCurrencies)
-                    converterViewController.viewModel.selectedCurrencies.accept(newSelectedCurrencies)
+                    converterViewController.viewModel.selectedCurrencies.onNext([SectionOfCurrency(items: newSelectedCurrencies)])
                 }
-                
+            
                 self.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)

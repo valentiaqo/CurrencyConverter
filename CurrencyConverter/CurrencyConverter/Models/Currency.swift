@@ -98,16 +98,27 @@ enum Currency: String, CaseIterable {
     }
 }
 
-struct SectionOfCurrency {
-    var items: [Item]
+extension Currency: IdentifiableType {
+    var identity: String {
+        return rawValue
+    }
 }
 
-extension SectionOfCurrency: SectionModelType {
+struct SectionOfCurrency {
+    var items: [Item]
+    var id = UUID()
+}
+
+extension SectionOfCurrency: AnimatableSectionModelType {
+    typealias Identity = String
     typealias Item = Currency
+    
+    var identity: String {
+        return id.uuidString
+    }
     
     init(original: SectionOfCurrency, items: [Item]) {
         self = original
         self.items = items
     }
 }
-

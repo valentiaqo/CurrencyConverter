@@ -6,13 +6,13 @@
 //
 
 import UIKit
-import RxRelay
+import RxSwift
 import XCoordinator
 
 protocol ConverterViewModelType: AnyObject {
     var router: WeakRouter<UserListRoute> { get }
     var selectedTradingOption: TradingOption { get set }
-    var selectedCurrencies: BehaviorRelay<[Currency]> { get }
+    var selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> { get }
     
     func addCurrencyButtonPressed()
     func rearrangeDraggedCurrencyPosition(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath)

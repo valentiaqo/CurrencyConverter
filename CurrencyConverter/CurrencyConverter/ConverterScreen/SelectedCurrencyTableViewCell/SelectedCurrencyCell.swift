@@ -32,6 +32,7 @@ final class SelectedCurrencyCell: UITableViewCell {
         contentView.isUserInteractionEnabled = false
         setUpSubviews()
         setUpCurrencyCodeStackView()
+        subscribeToReturnButtonTapped()
         addSubviews()
         addConstraints()
     }
@@ -45,6 +46,14 @@ final class SelectedCurrencyCell: UITableViewCell {
         viewModel?.currency
             .subscribe(onNext: { currency in
                 self.currencyCodeLabel.text = currency.code
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToReturnButtonTapped() {
+        amountTextField.rx.controlEvent(.primaryActionTriggered)
+            .subscribe(onNext: { [weak self] in
+                self?.amountTextField.resignFirstResponder()
             })
             .disposed(by: disposeBag)
     }

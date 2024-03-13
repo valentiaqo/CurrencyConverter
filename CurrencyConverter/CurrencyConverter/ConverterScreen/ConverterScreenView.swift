@@ -115,6 +115,44 @@ final class ConverterScreenView: UIView {
         lastTimeUpdatedVStack.distribution = .fillEqually
         lastTimeUpdatedVStack.spacing = 0
     }
+    
+    func toggleScrollViewContentOffset(notification: Notification) {
+        guard let userInfo = notification.userInfo as? [String: Any],
+              let keyboardHeight = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
+        else { return }
+        
+        let contentHeight = lastTimeUpdatedVStack.frame.origin.y + lastTimeUpdatedVStack.frame.height
+        let scrollViewHeight = scrollView.frame.height
+        let topGapHeight = converterView.frame.origin.y - titleLabel.frame.origin.y - titleLabel.frame.height
+        let bottomGapHeight = lastTimeUpdatedVStack.frame.origin.y - converterView.frame.origin.y - converterView.frame.height
+        let contentBottomOffset =  contentHeight + keyboardHeight + topGapHeight + bottomGapHeight - scrollViewHeight
+        
+        if notification.name == UIResponder.keyboardWillShowNotification && contentBottomOffset > 0 {
+            var contentBottomInset: CGFloat = 0
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+                let orientation = windowScene.interfaceOrientation
+                if orientation.isPortrait {
+                    switch contentBottomOffset {
+                    case 0...150:
+                        contentBottomInset = 350
+                    default:
+                        contentBottomInset = 230
+                    }
+                }
+            }
+            
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: contentBottomInset, right: 0)
+            scrollView.scrollIndicatorInsets = scrollView.contentInset
+            UIView.animate(withDuration: 0.5) {
+                self.scrollView.contentOffset = CGPoint(x: 0, y: contentBottomOffset)
+            }
+        } else if notification.name == UIResponder.keyboardWillHideNotification {
+            scrollView.contentInset = .zero
+            UIView.animate(withDuration: 0.5) {
+                self.scrollView.contentOffset = .zero
+            }
+        }
+    }
         
     // MARK: - Constraints
     private func addSubviews() {

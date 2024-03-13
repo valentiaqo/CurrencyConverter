@@ -7,7 +7,6 @@
 
 import UIKit
 import RxSwift
-import RxRelay
 import XCoordinator
 
 enum TradingOption {
@@ -19,7 +18,7 @@ final class ConverterViewModel: ConverterViewModelType {
     let router: WeakRouter<UserListRoute>
     
     var selectedTradingOption: TradingOption = .bid
-    let selectedCurrencies: BehaviorRelay<[Currency]> = .init(value: [.usd, .eur, .pln])
+    let selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> = .init(value: [SectionOfCurrency(items: [.usd, .eur, .pln])])
     
     //    fetchCurrentCurrenciesRates()
     
@@ -28,25 +27,30 @@ final class ConverterViewModel: ConverterViewModelType {
     }
     
     func addCurrencyButtonPressed() {
-        let newCurrencyList = Currency.getNewCurrencyList(basedOn: selectedCurrencies.value)
+        guard let currencyList = try? selectedCurrencies.value().first?.items as? [Currency] else { return }
+        let newCurrencyList = Currency.getNewCurrencyList(basedOn: currencyList)
         router.trigger(.currencySelection(newCurrencyList))
     }
     
     func rearrangeDraggedCurrencyPosition(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
         if destinationIndexPath != sourceIndexPath {
-            var rearrangedCurrencies = selectedCurrencies.value
-            let movedCurrency = rearrangedCurrencies[sourceIndexPath.row]
-            rearrangedCurrencies.remove(at: sourceIndexPath.row)
+            guard var sectionOfCurrencies = try? selectedCurrencies.value().first else { return }
+            var rearrangedCurrencies = sectionOfCurrencies.items
+            let movedCurrency = rearrangedCurrencies.remove(at: sourceIndexPath.row)
             rearrangedCurrencies.insert(movedCurrency, at: destinationIndexPath.row)
-            selectedCurrencies.accept(rearrangedCurrencies)
+            
+            sectionOfCurrencies.items = rearrangedCurrencies
+            selectedCurrencies.onNext([sectionOfCurrencies])
         }
     }
     
     func deleteCurrency(at indexPath: IndexPath) {
-        var newSelectedCurrencies = selectedCurrencies.value
+        guard var sectionOfCurrencies = try? selectedCurrencies.value().first else { return }
+        var newSelectedCurrencies = sectionOfCurrencies.items
         newSelectedCurrencies.remove(at: indexPath.row)
         
-        selectedCurrencies.accept(newSelectedCurrencies)
+        sectionOfCurrencies.items = newSelectedCurrencies
+        selectedCurrencies.onNext([sectionOfCurrencies])
     }
     
     func cellViewModel(currency: Currency) -> SelectedCurrencyCellViewModelType {
