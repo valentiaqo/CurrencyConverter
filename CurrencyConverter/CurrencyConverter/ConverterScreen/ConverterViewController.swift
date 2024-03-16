@@ -77,11 +77,8 @@ final class ConverterViewController: UIViewController {
         converterScreenView.converterView.doneButton.rx
             .tap
             .subscribe { [weak self] _ in
+                self?.converterScreenView.converterView.isInEditingMode.accept(false)
                 self?.converterScreenView.converterView.swapAddAndTradeButtonsVisability()
-                self?.converterScreenView.converterView.currenciesTableView.setEditing(false, animated: false)
-                self?.converterScreenView.converterView.currenciesTableView.visibleCells.forEach { cell in
-                    (cell as? SelectedCurrencyCell)?.animateCurrencyCodeConstraintsWithGesture(.ended)
-                }
             }
             .disposed(by: disposeBag)
     }
@@ -105,23 +102,26 @@ final class ConverterViewController: UIViewController {
         converterScreenView.converterView.longPressGesture.rx
             .event
             .subscribe(onNext: { [weak self] gesture in
-                switch gesture.state {
-                case .began:
-                    self?.converterScreenView.converterView.currenciesTableView.setEditing(true, animated: true)
-                    self?.converterScreenView.converterView.currenciesTableView.visibleCells.forEach { cell in
-                        (cell as? SelectedCurrencyCell)?.animateCurrencyCodeConstraintsWithGesture(.began)
+                guard let self else { return }
+                
+                if !converterScreenView.converterView.addCurrencyButton.isHidden {
+                    switch gesture.state {
+                    case .began:
+                        converterScreenView.converterView.isInEditingMode.accept(true)
+                        converterScreenView.converterView.swapAddAndTradeButtonsVisability()
+                    default:
+                        break
                     }
-                    self?.converterScreenView.converterView.swapAddAndTradeButtonsVisability()
-                default:
-                    break
                 }
             })
             .disposed(by: disposeBag)
     }
     
     private func subscribeToCurrenciesTableViewItemMoved() {
-        converterScreenView.converterView.currenciesTableView.rx.itemMoved.subscribe { sourceIndexPath, destinationIndexPath in
-            self.viewModel.rearrangeDraggedCurrencyPosition(sourceIndexPath: sourceIndexPath,
+        converterScreenView.converterView.currenciesTableView.rx
+            .itemMoved
+            .subscribe { sourceIndexPath, destinationIndexPath in
+            self.viewModel.rearrangeCurrencyPosition(sourceIndexPath: sourceIndexPath,
                                                             destinationIndexPath: destinationIndexPath)
         }
         .disposed(by: disposeBag)
@@ -153,6 +153,7 @@ extension ConverterViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: SelectedCurrencyCell.reuseIdentifier, for: indexPath)
             guard let self, let currency = try? viewModel.selectedCurrencies.value()[indexPath.section].items[indexPath.row] else { return UITableViewCell() }
             (cell as? SelectedCurrencyCell)?.viewModel = viewModel.cellViewModel(currency: currency)
+            (cell as? SelectedCurrencyCell)?.animateConstraintsWhenEditing(converterScreenView.converterView.isInEditingMode.value)
             return cell
             
         } canEditRowAtIndexPath: { _, _ in
@@ -188,42 +189,4 @@ extension ConverterViewController {
             })
             .disposed(by: disposeBag)
     }
-    
-//    private func toggleScrollViewContentOffset(notification: Notification) {
-//        guard let userInfo = notification.userInfo as? [String: Any],
-//              let keyboardHeight = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height
-//        else { return }
-//        
-//        let contentHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y + converterScreenView.lastTimeUpdatedVStack.frame.height
-//        let scrollViewHeight = converterScreenView.scrollView.frame.height
-//        let topGapHeight = converterScreenView.converterView.frame.origin.y - converterScreenView.titleLabel.frame.origin.y - converterScreenView.titleLabel.frame.height
-//        let bottomGapHeight = converterScreenView.lastTimeUpdatedVStack.frame.origin.y - converterScreenView.converterView.frame.origin.y - converterScreenView.converterView.frame.height
-//        let contentBottomOffset =  contentHeight + keyboardHeight + topGapHeight + bottomGapHeight - scrollViewHeight
-//        
-//        if notification.name == UIResponder.keyboardWillShowNotification && contentBottomOffset > 0 {
-//            var contentBottomInset: CGFloat = 0
-//            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
-//                let orientation = windowScene.interfaceOrientation
-//                if orientation.isPortrait {
-//                    switch contentBottomOffset {
-//                    case 0...150:
-//                        contentBottomInset = 350
-//                    default:
-//                        contentBottomInset = 230
-//                    }
-//                }
-//            }
-//            
-//            converterScreenView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: contentBottomInset, right: 0)
-//            converterScreenView.scrollView.scrollIndicatorInsets = converterScreenView.scrollView.contentInset
-//            UIView.animate(withDuration: 0.5) {
-//                self.converterScreenView.scrollView.contentOffset = CGPoint(x: 0, y: contentBottomOffset)
-//            }
-//        } else if notification.name == UIResponder.keyboardWillHideNotification {
-//            converterScreenView.scrollView.contentInset = .zero
-//            UIView.animate(withDuration: 0.5) {
-//                self.converterScreenView.scrollView.contentOffset = .zero
-//            }
-//        }
-//    }
 }

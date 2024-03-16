@@ -32,7 +32,7 @@ final class ConverterViewModel: ConverterViewModelType {
         router.trigger(.currencySelection(newCurrencyList))
     }
     
-    func rearrangeDraggedCurrencyPosition(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
+    func rearrangeCurrencyPosition(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
         if destinationIndexPath != sourceIndexPath {
             guard var sectionOfCurrencies = try? selectedCurrencies.value().first else { return }
             var rearrangedCurrencies = sectionOfCurrencies.items

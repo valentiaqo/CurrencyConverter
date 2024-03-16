@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxRelay
 
 final class ConverterView: UIView {
     let bidButton = UIButton()
@@ -17,12 +19,24 @@ final class ConverterView: UIView {
     var tradeButtonsLayerViewFrameXCoordinate: CGFloat = 0
     
     let currenciesTableView = UITableView(frame: .zero, style: .plain)
+    var currenciesTableViewCells: [SelectedCurrencyCell] {
+        var cells: [SelectedCurrencyCell] = []
+        (0..<currenciesTableView.numberOfRows(inSection: 0)).forEach { row in
+            guard let cell = currenciesTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? SelectedCurrencyCell else { return }
+            cells.append(cell)
+        }
+        
+        return cells
+    }
+    var isInEditingMode = BehaviorRelay(value: false)
     
     let addCurrencyButton = UIButton()
     let doneButton = UIButton()
     let shareButton = UIButton()
     
     let longPressGesture = UILongPressGestureRecognizer()
+    
+    let disposeBag = DisposeBag()
     
     //MARK: - Inits
     override init(frame: CGRect) {
@@ -40,6 +54,8 @@ final class ConverterView: UIView {
         setUpShareButton()
         addSubviews()
         addConstraints()
+        
+        subscribeToIsInEditingMode()
     }
     
     required init?(coder: NSCoder) {
@@ -228,6 +244,26 @@ final class ConverterView: UIView {
             self.doneButton.isHidden.toggle()
             self.addCurrencyButton.isHidden.toggle()
         }
+    }
+    
+    func setCurrenciesTableViewEditingMode(to isEditing: Bool) {
+        currenciesTableView.setEditing(isEditing, animated: isEditing)
+        setCellsEditingMode(to: isEditing)
+    }
+    
+    func setCellsEditingMode(to isEditing: Bool) {
+        currenciesTableViewCells.forEach { cell in
+            cell.animateConstraintsWhenEditing(isEditing)
+        }
+    }
+    
+    // MARK: - Subscriprions
+    private func subscribeToIsInEditingMode() {
+        isInEditingMode
+            .subscribe { isEditing in
+                self.setCurrenciesTableViewEditingMode(to: isEditing)
+            }
+            .disposed(by: disposeBag)
     }
     
     // MARK: - Constraints

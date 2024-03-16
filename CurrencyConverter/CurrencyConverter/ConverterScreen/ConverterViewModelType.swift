@@ -15,7 +15,7 @@ protocol ConverterViewModelType: AnyObject {
     var selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> { get }
     
     func addCurrencyButtonPressed()
-    func rearrangeDraggedCurrencyPosition(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath)
+    func rearrangeCurrencyPosition(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath)
     func deleteCurrency(at indexPath: IndexPath)
     func cellViewModel(currency: Currency) -> SelectedCurrencyCellViewModelType
 }

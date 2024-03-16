@@ -50,9 +50,9 @@ final class ConverterScreenView: UIView {
         
         let width = bounds.width / 1.3
         let height = bounds.height / 12
-        var outerRect: CGRect = CGRect()
-        var middleRect: CGRect = CGRect()
-        var innerRect: CGRect = CGRect()
+        var outerRect = CGRect()
+        var middleRect = CGRect()
+        var innerRect = CGRect()
         
         switch (traitCollection.horizontalSizeClass, traitCollection.verticalSizeClass) {
         case (.compact, .regular), (.regular, .regular):
@@ -94,10 +94,7 @@ final class ConverterScreenView: UIView {
         lastUpdateLabel.text = "Last updated"
         
         // updateTimeLabel
-        // TO BE CHANGED
-        // ---------------------------------------------
         updateTimeLabel.text = "06 Jan 2024 11:00 PM"
-        // ---------------------------------------------
         
         // lastUpdatedLabel and updateTimeLabel
         [lastUpdateLabel, updateTimeLabel].forEach { label in

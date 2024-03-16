@@ -7,6 +7,7 @@
 
 import UIKit
 import RxSwift
+import RxRelay
 import SnapKit
 
 final class SelectedCurrencyCell: UITableViewCell {
@@ -44,8 +45,8 @@ final class SelectedCurrencyCell: UITableViewCell {
     // MARK: - Subscriptions
     private func subscribeToCurrency() {
         viewModel?.currency
-            .subscribe(onNext: { currency in
-                self.currencyCodeLabel.text = currency.code
+            .subscribe(onNext: { [weak self] currency in
+                self?.currencyCodeLabel.text = currency.code
             })
             .disposed(by: disposeBag)
     }
@@ -89,10 +90,9 @@ final class SelectedCurrencyCell: UITableViewCell {
         addSubview(amountTextField)
     }
     
-    func animateCurrencyCodeConstraintsWithGesture(_ gesture: UILongPressGestureRecognizer.State) {
+    func animateConstraintsWhenEditing(_ editing: Bool) { //name change
         UIView.animate(withDuration: 0.3) {
-            switch gesture {
-            case .began:
+            if editing {
                 self.currencyCodeStackView.snp.updateConstraints { make in
                     make.leading.equalToSuperview().inset(64)
                 }
@@ -101,16 +101,14 @@ final class SelectedCurrencyCell: UITableViewCell {
                     make.trailing.equalToSuperview().inset(64)
                 }
                 self.layoutIfNeeded()
-            case .ended:
+            } else {
                 self.currencyCodeStackView.snp.updateConstraints { make in
                     make.leading.equalToSuperview().inset(32)
                 }
                 self.amountTextField.snp.updateConstraints { make in
                     make.trailing.equalToSuperview().inset(32)
                 }
-            default: break
             }
-            
         }
     }
     
