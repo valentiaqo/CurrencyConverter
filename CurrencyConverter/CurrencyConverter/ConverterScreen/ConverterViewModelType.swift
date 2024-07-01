@@ -17,7 +17,6 @@ protocol ConverterViewModelType: AnyObject {
     
     var selectedTradingOption: TradingOption { get set }
     var currencyRates: CurrencyRates? { get }
-    var currentlyEditedCurrency: Currency? { get set }
     
     var disposeBag: DisposeBag { get }
     

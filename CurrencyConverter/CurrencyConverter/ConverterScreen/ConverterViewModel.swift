@@ -26,9 +26,8 @@ final class ConverterViewModel: ConverterViewModelType {
     
     let selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> = .init(value: [SectionOfCurrency(items: [.usd, .eur, .pln])])
     
-    var selectedTradingOption: TradingOption = .ask
+    var selectedTradingOption: TradingOption = .bid
     var currencyRates: CurrencyRates?
-    var currentlyEditedCurrency: Currency?
 
     let disposeBag = DisposeBag()
     

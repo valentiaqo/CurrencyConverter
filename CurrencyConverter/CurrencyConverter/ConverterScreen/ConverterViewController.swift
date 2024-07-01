@@ -47,6 +47,8 @@ final class ConverterViewController: UIViewController {
         subscribeToTradeButtonsTapped()
         subscribeToDoneButtonTapped()
         subscribeToAddCurrencyButtonTapped()
+        subscribeToBidButtonTapped()
+        subscribeToAskButtonTapped()
     }
     
     override func viewWillLayoutSubviews() {
@@ -68,6 +70,80 @@ final class ConverterViewController: UIViewController {
     private func getCells(from cells: [SelectedCurrencyCell], except cell: SelectedCurrencyCell) -> [SelectedCurrencyCell] {
         return cells.filter { $0 != cell }
     }
+    
+    func makeConversion(for cell: SelectedCurrencyCell, previousText: String, newText: String) -> String {
+        // Initialize a number formatter for formatting currency values
+        let numberFormatter = AccountingNumberFormatter()
+        var acceptedText = numberFormatter.applyTextFieldTextFormat(for: cell.amountTextField,
+                                                                    previousText: previousText,
+                                                                    currentText: newText)
+        
+        if cellRatePairs.values.contains(where: { $0 == String() }) && cellRatePairs.values.contains(where: { $0 != String() }) {
+            cellRatePairs.forEach { cell, value in
+                cell.amountTextField.text = String()
+                cellRatePairs[cell] = String()
+            }
+            return acceptedText
+        }
+        
+        let cellIndexPath = converterScreenView.converterView.currenciesTableView.indexPath(for: cell)
+        
+        if editedCellIndexPath != cellIndexPath && cellRatePairs[cell] != String() {
+            return self.updateAcceptedTextForDifferentCell(cell: cell, acceptedText: &acceptedText, numberFormatter: numberFormatter)
+        } else if editedCellIndexPath == cellIndexPath || (editedCellIndexPath != cellIndexPath && cell.amountTextField.isEditing) {
+            return updateAcceptedTextForSameCell(cell: cell, acceptedText: &acceptedText, numberFormatter: numberFormatter)
+        } else {
+            return acceptedText
+        }
+    }
+    
+    private func updateAcceptedTextForDifferentCell(cell: SelectedCurrencyCell, acceptedText: inout String, numberFormatter: AccountingNumberFormatter) -> String {
+        let cellIndexPath = converterScreenView.converterView.currenciesTableView.indexPath(for: cell)
+        
+        self.editedCellIndexPath = cellIndexPath
+        acceptedText = self.cellRatePairs[cell].orEmpty
+        // Update rate value for the currently edited cell without grouping separators
+        self.cellRatePairs[cell] = numberFormatter.textWithourGroupingSeparators(self.cellRatePairs[cell].orEmpty)
+        
+        // Get a list of cells to update, excluding the current cell
+        let cellsToUpdate = self.getCells(from: Array(self.cellRatePairs.keys), except: cell)
+        // Iterate through each cell to update its text field format
+        cellsToUpdate.forEach { convertedCell in
+            self.cellRatePairs.forEach { cellKey, rateValue in
+                if convertedCell == cellKey {
+                    convertedCell.amountTextField.text = numberFormatter.applyTextFieldTextFormat(for: convertedCell.amountTextField,
+                                                                                                  previousText: rateValue,
+                                                                                                  currentText: rateValue)
+                }
+            }
+        }
+        return acceptedText
+    }
+    
+    private func updateAcceptedTextForSameCell(cell: SelectedCurrencyCell, acceptedText: inout String, numberFormatter: AccountingNumberFormatter) -> String {
+        let cellIndexPath = converterScreenView.converterView.currenciesTableView.indexPath(for: cell)
+        self.editedCellIndexPath = cellIndexPath
+        self.cellRatePairs[cell] = acceptedText
+        
+        let cellsToUpdate = self.getCells(from: Array(self.cellRatePairs.keys), except: cell)
+        cellsToUpdate.forEach { convertedCell in
+            // If accepted text is a valid double, get the currency rate and update text field format
+            if acceptedText.asDouble() != nil {
+                let rate = String(self.viewModel.getCurrencyRate(for: convertedCell, basedOn: cell))
+                convertedCell.amountTextField.text = numberFormatter.applyTextFieldTextFormat(for: convertedCell.amountTextField,
+                                                                                              previousText: rate,
+                                                                                              currentText: rate)
+                
+                self.cellRatePairs[convertedCell] = numberFormatter.textWithourGroupingSeparators(convertedCell.amountTextField.text.orEmpty)
+            } else if acceptedText.isEmpty {
+                // If accepted text is empty, clear the text field and rate value for the converted cell
+                convertedCell.amountTextField.text = String()
+                self.cellRatePairs[convertedCell] = String()
+            }
+        }
+        return acceptedText
+    }
+    
     
     // MARK: - Subscriprions
     private func subscribeToTradeButtonsTapped() {
@@ -105,100 +181,10 @@ final class ConverterViewController: UIViewController {
             .distinctUntilChanged()
             .scan(String(), accumulator: { previousText, newText in
                 cell.disposeBag = DisposeBag()
-                defer {
-//                    print(self.viewModel.currentlyEditedCurrency?.code)
-                }
                 return self.makeConversion(for: cell, previousText: previousText, newText: newText)
             })
             .bind(to: cell.amountTextField.rx.text)
             .disposed(by: disposeBag)
-    }
-    
-    func makeConversion(for cell: SelectedCurrencyCell, previousText: String, newText: String) -> String {
-        // Initialize a number formatter for formatting currency values
-        let numberFormatter = AccountingNumberFormatter()
-        var acceptedText = numberFormatter.applyTextFieldTextFormat(for: cell.amountTextField,
-                                                                    previousText: previousText,
-                                                                    currentText: newText)
-        
-        if cellRatePairs.values.contains(where: { $0 == String() }) && cellRatePairs.values.contains(where: { $0 != String() }) {
-            
-            cellRatePairs.forEach { keyCell, value in
-                if keyCell.currencyCodeLabel.text == viewModel.currentlyEditedCurrency?.code {
-                    print(keyCell.currencyCodeLabel.text)
-                    updateAcceptedTextForDifferentCell(cell: keyCell, acceptedText: &acceptedText, numberFormatter: numberFormatter)
-                }
-            }
-                
-//            cellRatePairs.forEach { cell, value in
-//                cell.amountTextField.text = String()
-//                cellRatePairs[cell] = String()
-//            }
-            return acceptedText
-        }
-        
-        let cellIndexPath = converterScreenView.converterView.currenciesTableView.indexPath(for: cell)
-        
-        if editedCellIndexPath != cellIndexPath && cellRatePairs[cell] != String() {
-            return self.updateAcceptedTextForDifferentCell(cell: cell, acceptedText: &acceptedText, numberFormatter: numberFormatter)
-        } else if editedCellIndexPath == cellIndexPath || (editedCellIndexPath != cellIndexPath && cell.amountTextField.isEditing) {
-            return updateAcceptedTextForSameCell(cell: cell, acceptedText: &acceptedText, numberFormatter: numberFormatter)
-        } else {
-            return acceptedText
-        }
-    }
-    
-    private func updateAcceptedTextForDifferentCell(cell: SelectedCurrencyCell, acceptedText: inout String, numberFormatter: AccountingNumberFormatter) -> String {
-        let cellIndexPath = converterScreenView.converterView.currenciesTableView.indexPath(for: cell)
-        //
-        viewModel.currentlyEditedCurrency = Currency.getCurrency(basedOn: cell.currencyCodeLabel.text.orEmpty)
-        //
-        
-        self.editedCellIndexPath = cellIndexPath
-        acceptedText = self.cellRatePairs[cell].orEmpty
-        // Update rate value for the currently edited cell without grouping separators
-        self.cellRatePairs[cell] = numberFormatter.textWithourGroupingSeparators(self.cellRatePairs[cell].orEmpty)
-        
-        // Get a list of cells to update, excluding the current cell
-        let cellsToUpdate = self.getCells(from: Array(self.cellRatePairs.keys), except: cell)
-        // Iterate through each cell to update its text field format
-        cellsToUpdate.forEach { convertedCell in
-            self.cellRatePairs.forEach { cellKey, rateValue in
-                if convertedCell == cellKey {
-                    convertedCell.amountTextField.text = numberFormatter.applyTextFieldTextFormat(for: convertedCell.amountTextField,
-                                                                                                  previousText: rateValue,
-                                                                                                  currentText: rateValue)
-                }
-            }
-        }
-        return acceptedText
-    }
-    
-    private func updateAcceptedTextForSameCell(cell: SelectedCurrencyCell, acceptedText: inout String, numberFormatter: AccountingNumberFormatter) -> String {
-        let cellIndexPath = converterScreenView.converterView.currenciesTableView.indexPath(for: cell)
-        self.editedCellIndexPath = cellIndexPath
-        //
-        viewModel.currentlyEditedCurrency = Currency.getCurrency(basedOn: cell.currencyCodeLabel.text.orEmpty)
-        //
-        self.cellRatePairs[cell] = acceptedText
-        
-        let cellsToUpdate = self.getCells(from: Array(self.cellRatePairs.keys), except: cell)
-        cellsToUpdate.forEach { convertedCell in
-            // If accepted text is a valid double, get the currency rate and update text field format
-            if acceptedText.asDouble() != nil {
-                let rate = String(self.viewModel.getCurrencyRate(for: convertedCell, basedOn: cell))
-                convertedCell.amountTextField.text = numberFormatter.applyTextFieldTextFormat(for: convertedCell.amountTextField,
-                                                                                              previousText: rate,
-                                                                                              currentText: rate)
-                
-                self.cellRatePairs[convertedCell] = numberFormatter.textWithourGroupingSeparators(convertedCell.amountTextField.text.orEmpty)
-            } else if acceptedText.isEmpty {
-                // If accepted text is empty, clear the text field and rate value for the converted cell
-                convertedCell.amountTextField.text = String()
-                self.cellRatePairs[convertedCell] = String()
-            }
-        }
-        return acceptedText
     }
     
     private func subscribeToLongPressGesture() {
@@ -246,6 +232,30 @@ final class ConverterViewController: UIViewController {
             .tap
             .subscribe { [weak self] _ in
                 self?.viewModel.addCurrencyButtonPressed()
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToBidButtonTapped() {
+        converterScreenView.converterView.bidButton.rx
+            .tap
+            .subscribe { [weak self] _ in
+                guard let editedCellIndexPath = self?.editedCellIndexPath,
+                      let editedCell = self?.converterScreenView.converterView.currenciesTableView.cellForRow(at: editedCellIndexPath) as? SelectedCurrencyCell else { return }
+                self?.viewModel.selectedTradingOption = .bid
+                _ = self?.makeConversion(for: editedCell, previousText: editedCell.amountTextField.text.orEmpty, newText: editedCell.amountTextField.text.orEmpty)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToAskButtonTapped() {
+        converterScreenView.converterView.askButton.rx
+            .tap
+            .subscribe { [weak self] _ in
+                guard let editedCellIndexPath = self?.editedCellIndexPath,
+                      let editedCell = self?.converterScreenView.converterView.currenciesTableView.cellForRow(at: editedCellIndexPath) as? SelectedCurrencyCell else { return }
+                self?.viewModel.selectedTradingOption = .ask
+                _ = self?.makeConversion(for: editedCell, previousText: editedCell.amountTextField.text.orEmpty, newText: editedCell.amountTextField.text.orEmpty)
             }
             .disposed(by: disposeBag)
     }
