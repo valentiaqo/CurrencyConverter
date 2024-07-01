@@ -19,15 +19,6 @@ final class ConverterView: UIView {
     var tradeButtonsLayerViewFrameXCoordinate: CGFloat = 0
     
     let currenciesTableView = UITableView(frame: .zero, style: .plain)
-    var currenciesTableViewCells: [SelectedCurrencyCell] {
-        var cells: [SelectedCurrencyCell] = []
-        (0..<currenciesTableView.numberOfRows(inSection: 0)).forEach { row in
-            guard let cell = currenciesTableView.cellForRow(at: IndexPath(row: row, section: 0)) as? SelectedCurrencyCell else { return }
-            cells.append(cell)
-        }
-        
-        return cells
-    }
     var isInEditingMode = BehaviorRelay(value: false)
     
     let addCurrencyButton = UIButton()
@@ -252,9 +243,11 @@ final class ConverterView: UIView {
     }
     
     func setCellsEditingMode(to isEditing: Bool) {
-        currenciesTableViewCells.forEach { cell in
+        currenciesTableView.visibleCells.forEach { cell in
+            guard let cell = cell as? SelectedCurrencyCell else { return }
             cell.animateConstraintsWhenEditing(isEditing)
         }
+        
     }
     
     // MARK: - Subscriprions

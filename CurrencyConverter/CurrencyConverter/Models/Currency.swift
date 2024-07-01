@@ -72,12 +72,13 @@ enum Currency: String, CaseIterable {
     
     static func sortedCurrencies(currencies: [Currency] = Currency.allCases) -> [SectionOfCurrency] {
         let alphabeticallySortedCurrenciesArray = currencies.sorted {
-            $0.fullName < $1.fullName
+            $0.code < $1.code
         }
+        
         var alphabeticallySorted2DArray = [SectionOfCurrency(items: [])]
         var section = 0
         for currency in alphabeticallySortedCurrenciesArray {
-            if alphabeticallySorted2DArray[section].items.isEmpty || alphabeticallySorted2DArray[section].items.first?.fullName.first == currency.fullName.first {
+            if alphabeticallySorted2DArray[section].items.isEmpty || alphabeticallySorted2DArray[section].items.first?.code.first == currency.code.first {
                 alphabeticallySorted2DArray[section].items.append(currency)
             } else {
                 section += 1
@@ -85,6 +86,7 @@ enum Currency: String, CaseIterable {
                 alphabeticallySorted2DArray[section].items.append(currency)
             }
         }
+        
         return alphabeticallySorted2DArray
     }
     

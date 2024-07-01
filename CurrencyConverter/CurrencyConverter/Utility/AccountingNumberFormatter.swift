@@ -8,13 +8,13 @@
 import UIKit
 
 final class AccountingNumberFormatter: NumberFormatter {
-    private let maxFormattedTextLength = 19
+    private var maxFormattedTextLength = 20
     
     override init() {
         super.init()
         numberStyle = .decimal
         maximumFractionDigits = 2
-        roundingMode = .down
+//        roundingMode = .down
         groupingSeparator = CharacterConstants.comma
         decimalSeparator = CharacterConstants.dot
     }
@@ -28,6 +28,7 @@ final class AccountingNumberFormatter: NumberFormatter {
         
         if textField.isFirstResponder {
             formatter.usesGroupingSeparator = false
+            maxFormattedTextLength = 15
         }
         
         let newTextWithoutGroupingSeparators = currentText.replacingOccurrences(of: formatter.groupingSeparator, with: String())
@@ -43,6 +44,7 @@ final class AccountingNumberFormatter: NumberFormatter {
         
         if let numberWithoutGroupingSeparator = formatter.number(from: newTextWithoutGroupingSeparators),
            let formattedText = formatter.string(from: numberWithoutGroupingSeparator), formattedText.count <= maxFormattedTextLength {
+                  
             if newTextWithoutGroupingSeparators.isValidWith(regex: RegexPattern.exactZero(separator: formatter.decimalSeparator)) {
                 return formattedText + formatter.decimalSeparator + String(0)
             } else if newTextWithoutGroupingSeparators.isValidWith(regex: RegexPattern.twoOrThreeZeros(separator: formatter.decimalSeparator)) {
@@ -54,5 +56,10 @@ final class AccountingNumberFormatter: NumberFormatter {
             }
         }
         return currentText.isEmpty ? currentText : previousText
+    }
+    
+    func textWithourGroupingSeparators(_ string: String) -> String {
+        let formatter = AccountingNumberFormatter()
+        return string.replacingOccurrences(of: formatter.groupingSeparator, with: String())
     }
 }

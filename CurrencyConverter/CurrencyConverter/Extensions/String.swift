@@ -38,4 +38,16 @@ extension String {
         
         return false
     }
+    
+    /// Converts current string to Double type, if possible
+    func asDouble() -> Double? {
+        guard let valueAsDouble = Double(self) else { return nil }
+        return valueAsDouble
+    }
+}
+
+extension Optional where Wrapped == String {
+    var orEmpty: String {
+        return self ?? ""
+    }
 }

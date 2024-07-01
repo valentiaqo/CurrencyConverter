@@ -19,7 +19,9 @@ final class SelectedCurrencyCell: UITableViewCell {
     
     let amountTextField = UITextField()
     
-    private let disposeBag = DisposeBag()
+    var isNewlyAdded = false
+    
+    var disposeBag = DisposeBag()
     
     weak var viewModel: SelectedCurrencyCellViewModelType? {
         didSet {

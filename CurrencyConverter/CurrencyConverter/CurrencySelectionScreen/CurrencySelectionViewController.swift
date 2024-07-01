@@ -53,24 +53,27 @@ final class CurrencySelectionViewController: UIViewController {
     }
     
     private func subscribeToSearchBarText() {
-        searchController.searchBar.rx.text.orEmpty.scan(String()) { previousText, newText in
-            let maxNumberOfSymbols = 15
-            
-            defer {
-                let textToUpdate = newText.isValidWith(regex: RegexPattern.onlyAlphaSymbols) ? newText : previousText
-                self.updateNoResultLabel(withText: textToUpdate)
-                self.updateCurrenciesList(withText: textToUpdate)
+        searchController.searchBar.rx
+            .text
+            .orEmpty
+            .scan(String()) { previousText, newText in
+                let maxNumberOfSymbols = 15
+                
+                defer {
+                    let textToUpdate = newText.isValidWith(regex: RegexPattern.onlyAlphaSymbols) ? newText : previousText
+                    self.updateNoResultLabel(withText: textToUpdate)
+                    self.updateCurrenciesList(withText: textToUpdate)
+                }
+                
+                if newText.count > maxNumberOfSymbols || !newText.isValidWith(regex: RegexPattern.onlyAlphaSymbols) {
+                    self.searchController.searchBar.text = newText.truncated(to: maxNumberOfSymbols)
+                    return previousText
+                }
+                
+                return newText
             }
-            
-            if newText.count > maxNumberOfSymbols || !newText.isValidWith(regex: RegexPattern.onlyAlphaSymbols) {
-                self.searchController.searchBar.text = newText.truncated(to: maxNumberOfSymbols)
-                return previousText
-            }
-            
-            return newText
-        }
-        .bind(to: searchController.searchBar.rx.text)
-        .disposed(by: disposeBag)
+            .bind(to: searchController.searchBar.rx.text)
+            .disposed(by: disposeBag)
     }
     
     private func subscribeToScrollViewWillBeginDragging() {
@@ -91,10 +94,9 @@ final class CurrencySelectionViewController: UIViewController {
                       let currencyName = cell.currencyNameLabel.text else { return }
                 
                 var newAvailableCurrencies = self.viewModel.filteredCurrencies.value
-
-                if let selectedCurrency = Currency.getCurrency(basedOn: currencyName), 
+                
+                if let selectedCurrency = Currency.getCurrency(basedOn: currencyName),
                     var newSelectedCurrencies = try? converterViewController.viewModel.selectedCurrencies.value().first?.items {
-                    
                     newSelectedCurrencies.append(selectedCurrency)
                     
                     newAvailableCurrencies.indices.forEach { index in
@@ -104,7 +106,7 @@ final class CurrencySelectionViewController: UIViewController {
                     self.viewModel.filteredCurrencies.accept(newAvailableCurrencies)
                     converterViewController.viewModel.selectedCurrencies.onNext([SectionOfCurrency(items: newSelectedCurrencies)])
                 }
-            
+                
                 self.navigationController?.popViewController(animated: true)
             }
             .disposed(by: disposeBag)
@@ -146,7 +148,7 @@ extension CurrencySelectionViewController {
             (cell as? AvailableCurrencyCell)?.viewModel = self.viewModel.cellViewModel(currency: currency)
             return cell
         } titleForHeaderInSection: { _, section in
-            guard let sectionFirstCharacter = self.viewModel.filteredCurrencies.value[section].items.first?.fullName.first else { return String() }
+            guard let sectionFirstCharacter = self.viewModel.filteredCurrencies.value[section].items.first?.code.first else { return String() }
             let sectionName = String(sectionFirstCharacter)
             return sectionName
         }

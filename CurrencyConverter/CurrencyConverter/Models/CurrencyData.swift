@@ -9,15 +9,7 @@ import Foundation
 
 // MARK: - CurrencyData
 struct CurrencyData: Codable {
-    let endpoint: String
     let quotes: [Quote]
-    let requestedTime: String
-    let timestamp: Int
-
-    enum CodingKeys: String, CodingKey {
-        case endpoint, quotes, timestamp
-        case requestedTime = "requested_time"
-    }
 }
 
 // MARK: - Quote
