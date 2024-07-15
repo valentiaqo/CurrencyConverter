@@ -23,12 +23,12 @@ enum ConversionOption {
 final class ConverterViewModel: ConverterViewModelType {
     let router: WeakRouter<UserListRoute>
     let currencyNetworkManager: CurrencyNetworkManagerType = CurrencyNetworkManager()
-    
     let selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> = .init(value: [SectionOfCurrency(items: [.usd, .eur, .pln])])
-    
     var selectedTradingOption: TradingOption = .bid
     var currencyRates: CurrencyRates?
-
+    var editedCurrency: Currency?
+    var currencyRatePairs: [Currency: String] = [:]
+    
     let disposeBag = DisposeBag()
     
     init(router: WeakRouter<UserListRoute>) {
@@ -68,27 +68,26 @@ final class ConverterViewModel: ConverterViewModelType {
             currencyRates = await currencyNetworkManager.fetchCurrentCurrenciesRates()
         }
     }
+    func convertRates(baseCurrency: Currency, baseValue: String) {
+        let currenciesToConvert = (try? selectedCurrencies.value().first?.items)?.filter({ $0 != baseCurrency})
+        guard let baseCurrencyValue = baseValue.asDouble() else { return }
     
-    func getCurrencyRate(for convertedCell: SelectedCurrencyCell, basedOn baseCell: SelectedCurrencyCell) -> Double {
-        guard let baseCurrencyValue = baseCell.amountTextField.text?.asDouble(),
-              let baseCurrencyName = baseCell.currencyCodeLabel.text
-        else { return 0 }
-        
-        // Checking if the currency rate exists for the selected currency (it doesn't exist for USD as it is the base currency and this case handeled in else statement)
-        if let editedCurrencyRate = currencyRates?.getRates(for: convertedCell.currencyCodeLabel.text.orEmpty) {
-            if Currency.getCurrency(basedOn: baseCurrencyName) == .usd {
-                // Performing currency conversion for USD based on USD
-                return performCurrencyConversion(conversionOption: .toNonUsdBasedOnUsd, convertedRate: editedCurrencyRate, convertedValue: baseCurrencyValue)
+        currenciesToConvert?.forEach({ convertedCurrency in
+            if let editedCurrencyRate = currencyRates?.getRates(for: convertedCurrency.code) {
+                if baseCurrency == .usd {
+                    // Performing currency conversion for USD based on USD
+                  currencyRatePairs[convertedCurrency] = String(performCurrencyConversion(conversionOption: .toNonUsdBasedOnUsd, convertedRate: editedCurrencyRate, convertedValue: baseCurrencyValue))
+                } else {
+                    // Performing currency conversion for non-USD based on non-USD
+                    guard let baseCurrencyRate = currencyRates?.getRates(for: baseCurrency.code) else { return }
+                    currencyRatePairs[convertedCurrency] = String(performCurrencyConversion(conversionOption: .toNonUsdBasedOnNonUsd, baseRate: baseCurrencyRate, convertedRate: editedCurrencyRate, convertedValue: baseCurrencyValue))
+                }
             } else {
-                // Performing currency conversion for non-USD based on non-USD
-                guard let baseCurrencyRate = currencyRates?.getRates(for: baseCurrencyName) else { return Double() }
-                return performCurrencyConversion(conversionOption: .toNonUsdBasedOnNonUsd, baseRate: baseCurrencyRate, convertedRate: editedCurrencyRate, convertedValue: baseCurrencyValue)
+                // Performing currency conversion for non-USD to USD
+                guard let baseCurrencyRate = currencyRates?.getRates(for: baseCurrency.code) else { return }
+                currencyRatePairs[convertedCurrency] = String(performCurrencyConversion(conversionOption: .toUsd, baseRate: baseCurrencyRate, convertedValue: baseCurrencyValue))
             }
-        } else {
-            // Performing currency conversion for non-USD to USD
-            guard let baseCurrencyRate = currencyRates?.getRates(for: baseCurrencyName) else { return Double() }
-            return performCurrencyConversion(conversionOption: .toUsd, baseRate: baseCurrencyRate, convertedValue: baseCurrencyValue)
-        }
+        })
     }
     
     func performCurrencyConversion(conversionOption: ConversionOption, baseRate: (ask: Double, bid: Double)? = nil, convertedRate: (ask: Double, bid: Double)? = nil, convertedValue: Double) -> Double {

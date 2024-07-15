@@ -43,7 +43,6 @@
 		1E631AAF2B5FC8AF00464EEC /* AvailableCurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AAE2B5FC8AF00464EEC /* AvailableCurrencyCell.swift */; };
 		1E631AB22B5FC8FA00464EEC /* AvailableCurrencyCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AB12B5FC8FA00464EEC /* AvailableCurrencyCellViewModel.swift */; };
 		1E631AB42B5FC90300464EEC /* AvailableCurrencyCellViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AB32B5FC90300464EEC /* AvailableCurrencyCellViewModelType.swift */; };
-		1E631AB62B5FD48600464EEC /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AB52B5FD48600464EEC /* ScrollView.swift */; };
 		1E631ABA2B5FD66000464EEC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E631ABC2B5FD66000464EEC /* Localizable.strings */; };
 		1E631ABE2B5FD79300464EEC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631ABD2B5FD79300464EEC /* Constants.swift */; };
 		1E631AC22B5FEF8400464EEC /* NoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AC12B5FEF8400464EEC /* NoResultsView.swift */; };
@@ -56,6 +55,7 @@
 		1E631AD52B7A861500464EEC /* CurrencyRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AD42B7A861500464EEC /* CurrencyRates.swift */; };
 		1E631AD72B7E535B00464EEC /* CurrencyNetworkManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AD62B7E535B00464EEC /* CurrencyNetworkManagerType.swift */; };
 		1E631ADB2B87D57700464EEC /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631ADA2B87D57700464EEC /* Coordinator.swift */; };
+		1E833C0E2C35D7A1000C03E1 /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C0D2C35D7A1000C03E1 /* ScrollView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,7 +87,6 @@
 		1E631AAE2B5FC8AF00464EEC /* AvailableCurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableCurrencyCell.swift; sourceTree = "<group>"; };
 		1E631AB12B5FC8FA00464EEC /* AvailableCurrencyCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableCurrencyCellViewModel.swift; sourceTree = "<group>"; };
 		1E631AB32B5FC90300464EEC /* AvailableCurrencyCellViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableCurrencyCellViewModelType.swift; sourceTree = "<group>"; };
-		1E631AB52B5FD48600464EEC /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
 		1E631ABB2B5FD66000464EEC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1E631ABD2B5FD79300464EEC /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = CurrencyConverter/CurrencySelectionScreen/AvailableCurrencyTableViewCell/Constants.swift; sourceTree = SOURCE_ROOT; };
 		1E631AC12B5FEF8400464EEC /* NoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultsView.swift; sourceTree = "<group>"; };
@@ -98,6 +97,7 @@
 		1E631AD42B7A861500464EEC /* CurrencyRates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRates.swift; sourceTree = "<group>"; };
 		1E631AD62B7E535B00464EEC /* CurrencyNetworkManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyNetworkManagerType.swift; sourceTree = "<group>"; };
 		1E631ADA2B87D57700464EEC /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		1E833C0D2C35D7A1000C03E1 /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,8 +146,8 @@
 				1E631A4F2B4212D600464EEC /* SceneDelegate.swift */,
 				1E631A8F2B42192E00464EEC /* ConverterScreen */,
 				1E631AA72B5FC60500464EEC /* CurrencySelectionScreen */,
-				1E631AB72B5FD49400464EEC /* Reusable UI elements */,
 				1E631AA42B5D3BB700464EEC /* Models */,
+				1E833C0F2C35D7AD000C03E1 /* Reusable UI Elements */,
 				1E631AD92B87D31F00464EEC /* Managers */,
 				1E631ADC2B87D58000464EEC /* Coordinators */,
 				1E631A712B4216EE00464EEC /* Extensions */,
@@ -263,14 +263,6 @@
 			path = AvailableCurrencyTableViewCell;
 			sourceTree = "<group>";
 		};
-		1E631AB72B5FD49400464EEC /* Reusable UI elements */ = {
-			isa = PBXGroup;
-			children = (
-				1E631AB52B5FD48600464EEC /* ScrollView.swift */,
-			);
-			path = "Reusable UI elements";
-			sourceTree = "<group>";
-		};
 		1E631ACF2B77BF3B00464EEC /* Utility */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,6 +294,15 @@
 				1E631ADA2B87D57700464EEC /* Coordinator.swift */,
 			);
 			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		1E833C0F2C35D7AD000C03E1 /* Reusable UI Elements */ = {
+			isa = PBXGroup;
+			children = (
+				1E833C0D2C35D7A1000C03E1 /* ScrollView.swift */,
+			);
+			name = "Reusable UI Elements";
+			path = "Models/Reusable UI Elements";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -411,7 +412,6 @@
 				1E631AA12B559DFF00464EEC /* SelectedCurrencyCellViewModelType.swift in Sources */,
 				1E631A932B47EA5E00464EEC /* ConverterView.swift in Sources */,
 				1E631A8A2B42190600464EEC /* ConverterScreenView.swift in Sources */,
-				1E631AB62B5FD48600464EEC /* ScrollView.swift in Sources */,
 				1E631ACE2B77BF3400464EEC /* AccountingNumberFormatter.swift in Sources */,
 				1E631AAD2B5FC72900464EEC /* CurrencySelectionViewModelType.swift in Sources */,
 				1E631AA32B5D3BB100464EEC /* Currency.swift in Sources */,
@@ -423,6 +423,7 @@
 				1E631A4E2B4212D600464EEC /* AppDelegate.swift in Sources */,
 				1E631AD12B7A817400464EEC /* CurrencyNetworkManager.swift in Sources */,
 				1E631A502B4212D600464EEC /* SceneDelegate.swift in Sources */,
+				1E833C0E2C35D7A1000C03E1 /* ScrollView.swift in Sources */,
 				1E631A702B4216D100464EEC /* UIColor.swift in Sources */,
 				1E631A9B2B559B1500464EEC /* SelectedCurrencyCell.swift in Sources */,
 				1E631AD52B7A861500464EEC /* CurrencyRates.swift in Sources */,
