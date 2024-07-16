@@ -10,10 +10,21 @@ import Foundation
 final class CurrencyNetworkManager: CurrencyNetworkManagerType {
     static let APIKey = ProcessInfo.processInfo.environment["API_KEY"]
     static let URLString = "https://marketdata.tradermade.com/api/v1/live?currency=USDAED,USDAOA,USDARS,USDAUD,USDBGN,USDBHD,USDBRL,USDCAD,USDCHF,USDCLP,USDCNY,USDCNH,USDCOP,USDCZK,USDDKK,USDEUR,USDGBP,USDHKD,USDHRK,USDHUF,USDIDR,USDILS,USDINR,USDISK,USDJPY,USDKRW,USDKWD,USDMAD,USDMXN,USDMYR,USDNGN,USDNOK,USDNZD,USDOMR,USDPEN,USDPHP,USDPLN,USDRON,USDRUB,USDSAR,USDSEK,USDSGD,USDTHB,USDTRY,USDTWD,USDVND,USDXAG,USDXAU,USDXPD,USDXPT,USDZAR&api_key=\(APIKey ?? String())"
+    
+    var cachedRates: CurrencyRates?
+    var lastFetchTime: Date?
         
     func fetchCurrentCurrenciesRates() async -> CurrencyRates? {
+        let currentTime = Date()
+        if let lastFetchTime = lastFetchTime, currentTime.timeIntervalSince(lastFetchTime) < 3600 {
+            return cachedRates
+        }
+        lastFetchTime = currentTime
+        
         let data = await fetchData(withURLString: CurrencyNetworkManager.URLString)
         guard let currentRates = parseJSON(withData: data) else { return nil }
+        cachedRates = currentRates
+        
         return currentRates
     }
     

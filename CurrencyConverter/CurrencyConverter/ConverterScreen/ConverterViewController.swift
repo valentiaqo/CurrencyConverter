@@ -14,9 +14,6 @@ final class ConverterViewController: UIViewController {
     let viewModel: ConverterViewModelType
     let converterScreenView = ConverterScreenView()
     
-//    var editedCellIndexPath: IndexPath?
-//    var cellRatePairs: [SelectedCurrencyCell: String] = [:]
-    
     let disposeBag = DisposeBag()
     
     // MARK: - Inits
@@ -47,6 +44,7 @@ final class ConverterViewController: UIViewController {
         subscribeToAddCurrencyButtonTapped()
         subscribeToBidButtonTapped()
         subscribeToAskButtonTapped()
+        updateTimeLabel()
     }
     
     override func viewWillLayoutSubviews() {
@@ -68,9 +66,6 @@ final class ConverterViewController: UIViewController {
     }
     
     func makeConversion(for cell: SelectedCurrencyCell, previousText: String, newText: String) -> String {
-//        defer {
-//            print(viewModel.currencyRatePairs)
-//        }
         let numberFormatter = AccountingNumberFormatter()
         var acceptedText = numberFormatter.applyTextFieldTextFormat(for: cell.amountTextField,
                                                                     previousText: previousText,
@@ -118,6 +113,17 @@ final class ConverterViewController: UIViewController {
             appendCellIfNotPresent(cell)
             subscribeToAmountTextFieldTextIn(cell)
         }
+    }
+    
+    private func updateTimeLabel() {
+        guard let lastFetchTime = viewModel.currencyNetworkManager.lastFetchTime else { return }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd MMM yyyy hh:mm a"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        let formattedDate = dateFormatter.string(from: lastFetchTime)
+        converterScreenView.updateTimeLabel.text = formattedDate
     }
     
     // MARK: - Subscriprions
