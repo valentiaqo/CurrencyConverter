@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 final class CurrencyNetworkManager: CurrencyNetworkManagerType {
     static let APIKey = ProcessInfo.processInfo.environment["API_KEY"]
@@ -21,20 +22,24 @@ final class CurrencyNetworkManager: CurrencyNetworkManagerType {
         }
         lastFetchTime = currentTime
         
-        let data = await fetchData(withURLString: CurrencyNetworkManager.URLString)
-        guard let currentRates = parseJSON(withData: data) else { return nil }
+        guard let data = await fetchData(withURLString: CurrencyNetworkManager.URLString), let currentRates = parseJSON(withData: data) else { return nil }
         cachedRates = currentRates
         
         return currentRates
     }
     
-    func fetchData(withURLString URLString: String) async -> Data {
-        guard let URL = URL(string: URLString) else { fatalError("Invalid URL") }
+    func fetchData(withURLString URLString: String) async -> Data? {
+        guard let URL = URL(string: URLString) else {
+            Logger.networkManager.error("Failed to fetch data: invalid URL")
+            return nil
+        }
+        
         do {
             let (data, _) = try await URLSession.shared.data(from: URL)
             return data
         } catch {
-            fatalError("Error fetching data: \(error)")
+            Logger.networkManager.error("Failed to fetch data: \(error.localizedDescription)")
+            return nil
         }
     }
     
@@ -43,7 +48,7 @@ final class CurrencyNetworkManager: CurrencyNetworkManagerType {
             let currencyData = try JSONDecoder().decode(CurrencyData.self, from: data)
             return CurrencyRates(currencyData: currencyData)
         } catch {
-            print("Error parsing JSON: \(error)")
+            Logger.networkManager.error("Failed to parse JSON: \(error.localizedDescription)")
             return nil
         }
     }

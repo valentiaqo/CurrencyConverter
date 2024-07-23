@@ -23,7 +23,8 @@ enum ConversionOption {
 final class ConverterViewModel: ConverterViewModelType {
     let router: WeakRouter<UserListRoute>
     let currencyNetworkManager: CurrencyNetworkManagerType = CurrencyNetworkManager()
-    let selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> = .init(value: [SectionOfCurrency(items: [.usd, .eur, .pln])])
+    let coreDataManager: CoreDataManagerType = CoreDataManager()
+    var selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> = .init(value: [SectionOfCurrency(items: [.usd, .eur, .pln])])
     var selectedTradingOption: TradingOption = .bid
     var currencyRates: CurrencyRates?
     var editedCurrency: Currency?
@@ -33,6 +34,7 @@ final class ConverterViewModel: ConverterViewModelType {
     
     init(router: WeakRouter<UserListRoute>) {
         self.router = router
+        refreshSelectedCurrencies()
         fetchCurrencyRates()
     }
     
@@ -57,7 +59,9 @@ final class ConverterViewModel: ConverterViewModelType {
     func deleteCurrency(at indexPath: IndexPath) {
         guard var sectionOfCurrencies = try? selectedCurrencies.value().first else { return }
         var newSelectedCurrencies = sectionOfCurrencies.items
-        newSelectedCurrencies.remove(at: indexPath.row)
+        let deletedCurrency = newSelectedCurrencies.remove(at: indexPath.row)
+        
+        coreDataManager.deleteSelectedCurrency(currencyName: deletedCurrency.code.lowercased())
         
         sectionOfCurrencies.items = newSelectedCurrencies
         selectedCurrencies.onNext([sectionOfCurrencies])
@@ -68,6 +72,11 @@ final class ConverterViewModel: ConverterViewModelType {
             currencyRates = await currencyNetworkManager.fetchCurrentCurrenciesRates()
         }
     }
+    
+    func refreshSelectedCurrencies() {
+        selectedCurrencies.onNext([SectionOfCurrency(items: coreDataManager.fetchSelectedCurrencies())])
+    }
+    
     func convertRates(baseCurrency: Currency, baseValue: String) {
         let currenciesToConvert = (try? selectedCurrencies.value().first?.items)?.filter({ $0 != baseCurrency})
         guard let baseCurrencyValue = baseValue.asDouble() else { return }
@@ -91,29 +100,33 @@ final class ConverterViewModel: ConverterViewModelType {
     }
     
     func performCurrencyConversion(conversionOption: ConversionOption, baseRate: (ask: Double, bid: Double)? = nil, convertedRate: (ask: Double, bid: Double)? = nil, convertedValue: Double) -> Double {
+        var resultValue: Double = 0
+        
         switch conversionOption {
         case .toUsd:
             guard let baseRate else { return Double() }
             if selectedTradingOption == .ask {
-                return (1 / baseRate.ask) * convertedValue
+                resultValue = (1 / baseRate.ask) * convertedValue
             } else {
-                return (1 / baseRate.bid) * convertedValue
+                resultValue = (1 / baseRate.bid) * convertedValue
             }
         case .toNonUsdBasedOnUsd:
             guard let convertedRate else { return Double() }
             if selectedTradingOption == .ask {
-                return convertedRate.ask * convertedValue
+                resultValue = convertedRate.ask * convertedValue
             } else {
-                return convertedRate.bid * convertedValue
+                resultValue = convertedRate.bid * convertedValue
             }
         case .toNonUsdBasedOnNonUsd:
             guard let baseRate, let convertedRate else { return Double() }
             if selectedTradingOption == .ask {
-                return (1 / baseRate.ask) * convertedValue * convertedRate.ask
+                resultValue = (1 / baseRate.ask) * convertedValue * convertedRate.ask
             } else {
-                return (1 / baseRate.bid) * convertedValue * convertedRate.bid
+                resultValue = (1 / baseRate.bid) * convertedValue * convertedRate.bid
             }
         }
+        
+        return resultValue.truncateToTwoDecimalPlaces()
     }
     
     func cellViewModel(currency: Currency) -> SelectedCurrencyCellViewModelType {

@@ -104,7 +104,10 @@ final class CurrencySelectionViewController: UIViewController {
                     }
                     
                     self.viewModel.filteredCurrencies.accept(newAvailableCurrencies)
-                    converterViewController.viewModel.selectedCurrencies.onNext([SectionOfCurrency(items: newSelectedCurrencies)])
+                    self.viewModel.coreDataManager.addSelectedCurrency(currencyName: currencyName.truncated(to: 3).lowercased())
+                    
+                    converterViewController.viewModel.refreshSelectedCurrencies()
+//                    converterViewController.viewModel.selectedCurrencies.onNext([SectionOfCurrency(items: newSelectedCurrencies)])
                 }
                 
                 self.navigationController?.popViewController(animated: true)

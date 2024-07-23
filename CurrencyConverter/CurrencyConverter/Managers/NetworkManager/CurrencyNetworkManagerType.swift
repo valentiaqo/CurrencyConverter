@@ -14,6 +14,6 @@ protocol CurrencyNetworkManagerType: AnyObject {
     var lastFetchTime: Date? { get set }
     
     func fetchCurrentCurrenciesRates() async -> CurrencyRates?
-    func fetchData(withURLString URLString: String) async -> Data
+    func fetchData(withURLString URLString: String) async -> Data?
     func parseJSON(withData data: Data) -> CurrencyRates?
 }

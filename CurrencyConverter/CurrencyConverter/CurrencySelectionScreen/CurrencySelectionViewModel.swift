@@ -11,6 +11,7 @@ import XCoordinator
 
 final class CurrencySelectionViewModel: CurrencySelectionViewModelType {
     let router: WeakRouter<UserListRoute>
+    let coreDataManager: CoreDataManagerType = CoreDataManager()
     
     let availableCurrencies: [SectionOfCurrency]
     var filteredCurrencies: BehaviorRelay<[SectionOfCurrency]>

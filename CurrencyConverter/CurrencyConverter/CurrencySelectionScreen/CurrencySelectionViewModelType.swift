@@ -11,6 +11,7 @@ import XCoordinator
 
 protocol CurrencySelectionViewModelType: AnyObject {
     var router: WeakRouter<UserListRoute> { get }
+    var coreDataManager: CoreDataManagerType { get }
     var availableCurrencies: [SectionOfCurrency] { get }
     var filteredCurrencies: BehaviorRelay<[SectionOfCurrency]> { get set }
     

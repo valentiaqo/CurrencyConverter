@@ -6,3 +6,12 @@
 //
 
 import Foundation
+import CoreData
+
+protocol CoreDataManagerType: AnyObject {
+    var context: NSManagedObjectContext { get }
+    
+    func fetchSelectedCurrencies() -> [Currency]
+    func addSelectedCurrency(currencyName: String)
+    func deleteSelectedCurrency(currencyName: String)
+}
