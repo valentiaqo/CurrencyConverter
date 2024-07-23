@@ -14,6 +14,7 @@ final class AccountingNumberFormatter: NumberFormatter {
         super.init()
         numberStyle = .decimal
         maximumFractionDigits = 2
+        roundingMode = .down
         groupingSeparator = CharacterConstants.comma
         decimalSeparator = CharacterConstants.dot
     }

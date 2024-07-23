@@ -72,7 +72,6 @@ final class ConverterViewController: UIViewController {
                                                                     currentText: newText)
         
         guard let cellCurrency = currencyFrom(cell) else { return acceptedText }
-        
         if viewModel.editedCurrency != cellCurrency && viewModel.currencyRatePairs[cellCurrency] != String() {
             viewModel.editedCurrency = cellCurrency
             acceptedText = viewModel.currencyRatePairs[cellCurrency].orEmpty

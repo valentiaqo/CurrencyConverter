@@ -14,9 +14,8 @@ struct CurrencyData: Codable {
 
 // MARK: - Quote
 struct Quote: Codable {
-    let ask: Double?
+    let ask, bid, mid: Double?
     let baseCurrency: String?
-    let bid, mid: Double?
     let quoteCurrency: String?
 
     enum CodingKeys: String, CodingKey {
