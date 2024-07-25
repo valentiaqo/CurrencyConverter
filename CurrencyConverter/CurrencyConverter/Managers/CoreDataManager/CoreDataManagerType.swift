@@ -11,7 +11,13 @@ import CoreData
 protocol CoreDataManagerType: AnyObject {
     var context: NSManagedObjectContext { get }
     
-    func fetchSelectedCurrencies() -> [Currency]
-    func addSelectedCurrency(currencyName: String)
+    func retrieveSelectedCurrencies() -> [Currency]
+    func createSelectedCurrency(currencyName: String)
     func deleteSelectedCurrency(currencyName: String)
+    func retrieveCurrencyRatesCache() -> CurrencyRates?
+    func createCurrencyRatesCache(rates: CurrencyRates)
+    func deleteCurrencyRatesCache()
+    func retrieveLastFetchTime() -> Date?
+    func createLastFetchTime(currentFetchDate: Date) 
+    func deleteLastFetchTime()
 }

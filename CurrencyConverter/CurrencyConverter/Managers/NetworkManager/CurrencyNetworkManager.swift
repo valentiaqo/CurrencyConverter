@@ -9,23 +9,19 @@ import Foundation
 import OSLog
 
 final class CurrencyNetworkManager: CurrencyNetworkManagerType {
+    let coreDataManager: CoreDataManagerType = CoreDataManager()
     static let APIKey = ProcessInfo.processInfo.environment["API_KEY"]
     static let URLString = "https://marketdata.tradermade.com/api/v1/live?currency=USDAED,USDAOA,USDARS,USDAUD,USDBGN,USDBHD,USDBRL,USDCAD,USDCHF,USDCLP,USDCNY,USDCNH,USDCOP,USDCZK,USDDKK,USDEUR,USDGBP,USDHKD,USDHRK,USDHUF,USDIDR,USDILS,USDINR,USDISK,USDJPY,USDKRW,USDKWD,USDMAD,USDMXN,USDMYR,USDNGN,USDNOK,USDNZD,USDOMR,USDPEN,USDPHP,USDPLN,USDRON,USDRUB,USDSAR,USDSEK,USDSGD,USDTHB,USDTRY,USDTWD,USDVND,USDXAG,USDXAU,USDXPD,USDXPT,USDZAR&api_key=\(APIKey ?? String())"
-    
-    var cachedRates: CurrencyRates?
-    var lastFetchTime: Date?
         
-    func fetchCurrentCurrenciesRates() async -> CurrencyRates? {
+    func fetchCurrentCurrenciesRates() async {
         let currentTime = Date()
-        if let lastFetchTime = lastFetchTime, currentTime.timeIntervalSince(lastFetchTime) < 3600 {
-            return cachedRates
+        if let lastFetchTime = coreDataManager.retrieveLastFetchTime(), currentTime.timeIntervalSince(lastFetchTime) < 3600 {
+            return
         }
-        lastFetchTime = currentTime
         
-        guard let data = await fetchData(withURLString: CurrencyNetworkManager.URLString), let currentRates = parseJSON(withData: data) else { return nil }
-        cachedRates = currentRates
-        
-        return currentRates
+        guard let data = await fetchData(withURLString: CurrencyNetworkManager.URLString), let currentRates = parseJSON(withData: data) else { return }
+        coreDataManager.createLastFetchTime(currentFetchDate: currentTime)
+        coreDataManager.createCurrencyRatesCache(rates: currentRates)
     }
     
     func fetchData(withURLString URLString: String) async -> Data? {

@@ -115,7 +115,7 @@ final class ConverterViewController: UIViewController {
     }
     
     private func updateTimeLabel() {
-        guard let lastFetchTime = viewModel.currencyNetworkManager.lastFetchTime else { return }
+        guard let lastFetchTime = viewModel.coreDataManager.retrieveLastFetchTime() else { return }
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "dd MMM yyyy hh:mm a"

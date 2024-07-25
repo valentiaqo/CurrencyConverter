@@ -93,9 +93,6 @@ final class ConverterScreenView: UIView {
         // lastUpdatedLabel
         lastUpdateLabel.text = "Last updated"
         
-        // updateTimeLabel
-        updateTimeLabel.text = "06 Jan 2024 11:00 PM"
-        
         // lastUpdatedLabel and updateTimeLabel
         [lastUpdateLabel, updateTimeLabel].forEach { label in
             label.font = UIFont(name: Fonts.Inter.regular.rawValue , size: 15)

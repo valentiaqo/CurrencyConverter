@@ -69,12 +69,13 @@ final class ConverterViewModel: ConverterViewModelType {
     
     func fetchCurrencyRates() {
         Task {
-            currencyRates = await currencyNetworkManager.fetchCurrentCurrenciesRates()
+           await currencyNetworkManager.fetchCurrentCurrenciesRates()
+            currencyRates = coreDataManager.retrieveCurrencyRatesCache()
         }
     }
     
     func refreshSelectedCurrencies() {
-        selectedCurrencies.onNext([SectionOfCurrency(items: coreDataManager.fetchSelectedCurrencies())])
+        selectedCurrencies.onNext([SectionOfCurrency(items: coreDataManager.retrieveSelectedCurrencies())])
     }
     
     func convertRates(baseCurrency: Currency, baseValue: String) {
