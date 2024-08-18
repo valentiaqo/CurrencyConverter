@@ -10,11 +10,11 @@ import CoreData
 import OSLog
 
 final class CoreDataManager: CoreDataManagerType {
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    lazy var context: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     func retrieveSelectedCurrencies() -> [Currency] {
         do {
-            let fetchedCurrencies = try context.fetch(SelectedCurrencies.fetchRequest())
+            let fetchedCurrencies = try context.fetch(SelectedCurrency.fetchRequest())
             let chosenCurrencies = fetchedCurrencies.compactMap { $0.chosenCurrency }
             let selectedCurrencies = chosenCurrencies.compactMap { Currency.getCurrency(basedOn: $0) }
             
@@ -26,7 +26,7 @@ final class CoreDataManager: CoreDataManagerType {
     }
     
     func createSelectedCurrency(currencyName: String) {
-        let currencyToAdd = SelectedCurrencies(context: context)
+        let currencyToAdd = SelectedCurrency(context: context)
         currencyToAdd.chosenCurrency = currencyName
         do {
             try context.save()
@@ -37,7 +37,7 @@ final class CoreDataManager: CoreDataManagerType {
     
     func deleteSelectedCurrency(currencyName: String) {
         do {
-            let selectedCurrencies = try context.fetch(SelectedCurrencies.fetchRequest())
+            let selectedCurrencies = try context.fetch(SelectedCurrency.fetchRequest())
             selectedCurrencies.forEach { selectedCurrency in
                 if selectedCurrency.chosenCurrency == currencyName {
                     context.delete(selectedCurrency)
@@ -52,7 +52,7 @@ final class CoreDataManager: CoreDataManagerType {
     
     func retrieveCurrencyRatesCache() -> CurrencyRates? {
         do {
-            let currencyRates = try context.fetch(CurrencyRatesCache.fetchRequest())
+            let currencyRates = try context.fetch(CurrencyRate.fetchRequest())
             let quotes = currencyRates.compactMap { currencyRatesCache in
                 Quote(ask: currencyRatesCache.ask, bid: currencyRatesCache.bid, mid: nil, baseCurrency: "USD", quoteCurrency: currencyRatesCache.quoteCurrency)
             }
@@ -74,7 +74,7 @@ final class CoreDataManager: CoreDataManagerType {
         rates.quotes.forEach { quote in
             guard let ask = quote.ask, let bid = quote.bid, let quoteCurrency = quote.quoteCurrency else { return }
             
-            let quoteToAdd = CurrencyRatesCache(context: context)
+            let quoteToAdd = CurrencyRate(context: context)
             quoteToAdd.ask = ask
             quoteToAdd.bid = bid
             quoteToAdd.quoteCurrency = quoteCurrency
@@ -89,13 +89,13 @@ final class CoreDataManager: CoreDataManagerType {
     
     func deleteCurrencyRatesCache() {
         do {
-            let currencyRates = try context.fetch(CurrencyRatesCache.fetchRequest())
+            let currencyRates = try context.fetch(CurrencyRate.fetchRequest())
             currencyRates.forEach { currencyRateCache in
                 context.delete(currencyRateCache)
             }
             try context.save()
         } catch {
-            Logger.coreDataManager.error("Failed to delete SelectedCurrencies: \(error.localizedDescription)")
+            Logger.coreDataManager.error("Failed to delete CurrencyRatesCache: \(error.localizedDescription)")
         }
     }
     

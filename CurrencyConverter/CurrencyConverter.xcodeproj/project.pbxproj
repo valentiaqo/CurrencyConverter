@@ -19,11 +19,8 @@
 		1E631A6D2B4214DD00464EEC /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A682B4214DD00464EEC /* Fonts.swift */; };
 		1E631A702B4216D100464EEC /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A6F2B4216D100464EEC /* UIColor.swift */; };
 		1E631A742B42178800464EEC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A732B42178800464EEC /* SnapKit */; };
-		1E631A762B42178800464EEC /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A752B42178800464EEC /* SnapKit-Dynamic */; };
 		1E631A792B4217A800464EEC /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A782B4217A800464EEC /* RxBlocking */; };
-		1E631A7B2B4217A800464EEC /* RxBlocking-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A7A2B4217A800464EEC /* RxBlocking-Dynamic */; };
 		1E631A7D2B4217A800464EEC /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A7C2B4217A800464EEC /* RxCocoa */; };
-		1E631A7F2B4217A800464EEC /* RxCocoa-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A7E2B4217A800464EEC /* RxCocoa-Dynamic */; };
 		1E631A812B4217A800464EEC /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A802B4217A800464EEC /* RxRelay */; };
 		1E631A842B4217FC00464EEC /* XCoordinator in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A832B4217FC00464EEC /* XCoordinator */; };
 		1E631A862B4217FC00464EEC /* XCoordinatorCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631A852B4217FC00464EEC /* XCoordinatorCombine */; };
@@ -50,23 +47,20 @@
 		1E631AC72B62D95100464EEC /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631AC62B62D95100464EEC /* Differentiator */; };
 		1E631AC92B62D95100464EEC /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 1E631AC82B62D95100464EEC /* RxDataSources */; };
 		1E631ACE2B77BF3400464EEC /* AccountingNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631ACD2B77BF3400464EEC /* AccountingNumberFormatter.swift */; };
-		1E631AD12B7A817400464EEC /* CurrencyNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AD02B7A817400464EEC /* CurrencyNetworkManager.swift */; };
+		1E631AD12B7A817400464EEC /* RatesNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AD02B7A817400464EEC /* RatesNetworkManager.swift */; };
 		1E631AD32B7A85BF00464EEC /* CurrencyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AD22B7A85BF00464EEC /* CurrencyData.swift */; };
 		1E631AD52B7A861500464EEC /* CurrencyRates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AD42B7A861500464EEC /* CurrencyRates.swift */; };
-		1E631AD72B7E535B00464EEC /* CurrencyNetworkManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AD62B7E535B00464EEC /* CurrencyNetworkManagerType.swift */; };
+		1E631AD72B7E535B00464EEC /* RatesNetworkManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AD62B7E535B00464EEC /* RatesNetworkManagerType.swift */; };
 		1E631ADB2B87D57700464EEC /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631ADA2B87D57700464EEC /* Coordinator.swift */; };
 		1E833C0E2C35D7A1000C03E1 /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C0D2C35D7A1000C03E1 /* ScrollView.swift */; };
 		1E833C122C482F07000C03E1 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C102C482F07000C03E1 /* DataModel.xcdatamodeld */; };
 		1E833C732C4C20ED000C03E1 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C722C4C20ED000C03E1 /* CoreDataManager.swift */; };
 		1E833C752C4C210E000C03E1 /* CoreDataManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C742C4C210E000C03E1 /* CoreDataManagerType.swift */; };
-		1E833C822C4D16DC000C03E1 /* SelectedCurrencies+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C7E2C4D16DC000C03E1 /* SelectedCurrencies+CoreDataClass.swift */; };
-		1E833C832C4D16DC000C03E1 /* SelectedCurrencies+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C7F2C4D16DC000C03E1 /* SelectedCurrencies+CoreDataProperties.swift */; };
 		1E833C872C4D50C6000C03E1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C862C4D50C6000C03E1 /* Logger.swift */; };
 		1E833C892C5019D9000C03E1 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C882C5019D9000C03E1 /* Double.swift */; };
-		1E833C902C517521000C03E1 /* CurrencyRatesCache+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C8E2C517521000C03E1 /* CurrencyRatesCache+CoreDataClass.swift */; };
-		1E833C912C517521000C03E1 /* CurrencyRatesCache+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E833C8F2C517521000C03E1 /* CurrencyRatesCache+CoreDataProperties.swift */; };
-		1EC586082C51780B00DE5A18 /* LastFetchTime+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC586062C51780B00DE5A18 /* LastFetchTime+CoreDataClass.swift */; };
-		1EC586092C51780B00DE5A18 /* LastFetchTime+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC586072C51780B00DE5A18 /* LastFetchTime+CoreDataProperties.swift */; };
+		1EBAA8742C6E280C00DBCEAC /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBAA8732C6E280C00DBCEAC /* Notification.swift */; };
+		1EE4E11E2C600C0A00476C77 /* BackgroundTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE4E11D2C600C0A00476C77 /* BackgroundTaskManager.swift */; };
+		1EE4E1202C600C1B00476C77 /* BackgroundTaskManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE4E11F2C600C1B00476C77 /* BackgroundTaskManagerType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -103,23 +97,20 @@
 		1E631AC12B5FEF8400464EEC /* NoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultsView.swift; sourceTree = "<group>"; };
 		1E631AC32B62A21E00464EEC /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		1E631ACD2B77BF3400464EEC /* AccountingNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountingNumberFormatter.swift; sourceTree = "<group>"; };
-		1E631AD02B7A817400464EEC /* CurrencyNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyNetworkManager.swift; sourceTree = "<group>"; };
+		1E631AD02B7A817400464EEC /* RatesNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatesNetworkManager.swift; sourceTree = "<group>"; };
 		1E631AD22B7A85BF00464EEC /* CurrencyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyData.swift; sourceTree = "<group>"; };
 		1E631AD42B7A861500464EEC /* CurrencyRates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRates.swift; sourceTree = "<group>"; };
-		1E631AD62B7E535B00464EEC /* CurrencyNetworkManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyNetworkManagerType.swift; sourceTree = "<group>"; };
+		1E631AD62B7E535B00464EEC /* RatesNetworkManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatesNetworkManagerType.swift; sourceTree = "<group>"; };
 		1E631ADA2B87D57700464EEC /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		1E833C0D2C35D7A1000C03E1 /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
 		1E833C112C482F07000C03E1 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		1E833C722C4C20ED000C03E1 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		1E833C742C4C210E000C03E1 /* CoreDataManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManagerType.swift; sourceTree = "<group>"; };
-		1E833C7E2C4D16DC000C03E1 /* SelectedCurrencies+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedCurrencies+CoreDataClass.swift"; sourceTree = "<group>"; };
-		1E833C7F2C4D16DC000C03E1 /* SelectedCurrencies+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelectedCurrencies+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1E833C862C4D50C6000C03E1 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		1E833C882C5019D9000C03E1 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
-		1E833C8E2C517521000C03E1 /* CurrencyRatesCache+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CurrencyRatesCache+CoreDataClass.swift"; sourceTree = "<group>"; };
-		1E833C8F2C517521000C03E1 /* CurrencyRatesCache+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CurrencyRatesCache+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		1EC586062C51780B00DE5A18 /* LastFetchTime+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastFetchTime+CoreDataClass.swift"; sourceTree = "<group>"; };
-		1EC586072C51780B00DE5A18 /* LastFetchTime+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LastFetchTime+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		1EBAA8732C6E280C00DBCEAC /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		1EE4E11D2C600C0A00476C77 /* BackgroundTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskManager.swift; sourceTree = "<group>"; };
+		1EE4E11F2C600C1B00476C77 /* BackgroundTaskManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskManagerType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,10 +126,7 @@
 				1E631A812B4217A800464EEC /* RxRelay in Frameworks */,
 				1E631A7D2B4217A800464EEC /* RxCocoa in Frameworks */,
 				1E631A882B4217FC00464EEC /* XCoordinatorRx in Frameworks */,
-				1E631A762B42178800464EEC /* SnapKit-Dynamic in Frameworks */,
 				1E631AC92B62D95100464EEC /* RxDataSources in Frameworks */,
-				1E631A7F2B4217A800464EEC /* RxCocoa-Dynamic in Frameworks */,
-				1E631A7B2B4217A800464EEC /* RxBlocking-Dynamic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +215,7 @@
 				1E631A6F2B4216D100464EEC /* UIColor.swift */,
 				1E631AC32B62A21E00464EEC /* String.swift */,
 				1E833C882C5019D9000C03E1 /* Double.swift */,
+				1EBAA8732C6E280C00DBCEAC /* Notification.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -298,8 +287,8 @@
 		1E631AD82B7E537400464EEC /* NetworkManager */ = {
 			isa = PBXGroup;
 			children = (
-				1E631AD02B7A817400464EEC /* CurrencyNetworkManager.swift */,
-				1E631AD62B7E535B00464EEC /* CurrencyNetworkManagerType.swift */,
+				1E631AD02B7A817400464EEC /* RatesNetworkManager.swift */,
+				1E631AD62B7E535B00464EEC /* RatesNetworkManagerType.swift */,
 			);
 			path = NetworkManager;
 			sourceTree = "<group>";
@@ -307,8 +296,9 @@
 		1E631AD92B87D31F00464EEC /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				1E833C132C482F0F000C03E1 /* CoreDataManager */,
 				1E631AD82B7E537400464EEC /* NetworkManager */,
+				1EE4E1212C600C1F00476C77 /* BackgroundTaskManager */,
+				1E833C132C482F0F000C03E1 /* CoreDataManager */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -336,14 +326,17 @@
 				1E833C102C482F07000C03E1 /* DataModel.xcdatamodeld */,
 				1E833C722C4C20ED000C03E1 /* CoreDataManager.swift */,
 				1E833C742C4C210E000C03E1 /* CoreDataManagerType.swift */,
-				1E833C7E2C4D16DC000C03E1 /* SelectedCurrencies+CoreDataClass.swift */,
-				1E833C7F2C4D16DC000C03E1 /* SelectedCurrencies+CoreDataProperties.swift */,
-				1E833C8E2C517521000C03E1 /* CurrencyRatesCache+CoreDataClass.swift */,
-				1E833C8F2C517521000C03E1 /* CurrencyRatesCache+CoreDataProperties.swift */,
-				1EC586062C51780B00DE5A18 /* LastFetchTime+CoreDataClass.swift */,
-				1EC586072C51780B00DE5A18 /* LastFetchTime+CoreDataProperties.swift */,
 			);
 			path = CoreDataManager;
+			sourceTree = "<group>";
+		};
+		1EE4E1212C600C1F00476C77 /* BackgroundTaskManager */ = {
+			isa = PBXGroup;
+			children = (
+				1EE4E11D2C600C0A00476C77 /* BackgroundTaskManager.swift */,
+				1EE4E11F2C600C1B00476C77 /* BackgroundTaskManagerType.swift */,
+			);
+			path = BackgroundTaskManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -364,11 +357,8 @@
 			name = CurrencyConverter;
 			packageProductDependencies = (
 				1E631A732B42178800464EEC /* SnapKit */,
-				1E631A752B42178800464EEC /* SnapKit-Dynamic */,
 				1E631A782B4217A800464EEC /* RxBlocking */,
-				1E631A7A2B4217A800464EEC /* RxBlocking-Dynamic */,
 				1E631A7C2B4217A800464EEC /* RxCocoa */,
-				1E631A7E2B4217A800464EEC /* RxCocoa-Dynamic */,
 				1E631A802B4217A800464EEC /* RxRelay */,
 				1E631A832B4217FC00464EEC /* XCoordinator */,
 				1E631A852B4217FC00464EEC /* XCoordinatorCombine */,
@@ -445,33 +435,31 @@
 				1E631AA62B5FC60100464EEC /* CurrencySelectionViewController.swift in Sources */,
 				1E631ADB2B87D57700464EEC /* Coordinator.swift in Sources */,
 				1E631ABE2B5FD79300464EEC /* Constants.swift in Sources */,
+				1EE4E11E2C600C0A00476C77 /* BackgroundTaskManager.swift in Sources */,
 				1E833C892C5019D9000C03E1 /* Double.swift in Sources */,
 				1E631A8C2B42191C00464EEC /* ConverterViewModel.swift in Sources */,
 				1E631AAF2B5FC8AF00464EEC /* AvailableCurrencyCell.swift in Sources */,
-				1E833C832C4D16DC000C03E1 /* SelectedCurrencies+CoreDataProperties.swift in Sources */,
 				1E833C732C4C20ED000C03E1 /* CoreDataManager.swift in Sources */,
 				1E631A6D2B4214DD00464EEC /* Fonts.swift in Sources */,
 				1E631AC42B62A21E00464EEC /* String.swift in Sources */,
-				1EC586092C51780B00DE5A18 /* LastFetchTime+CoreDataProperties.swift in Sources */,
+				1EE4E1202C600C1B00476C77 /* BackgroundTaskManagerType.swift in Sources */,
+				1EBAA8742C6E280C00DBCEAC /* Notification.swift in Sources */,
 				1E631AA92B5FC63200464EEC /* CurrencySelectionView.swift in Sources */,
 				1E631AA12B559DFF00464EEC /* SelectedCurrencyCellViewModelType.swift in Sources */,
 				1E631A932B47EA5E00464EEC /* ConverterView.swift in Sources */,
 				1E631A8A2B42190600464EEC /* ConverterScreenView.swift in Sources */,
 				1E631ACE2B77BF3400464EEC /* AccountingNumberFormatter.swift in Sources */,
 				1E631AAD2B5FC72900464EEC /* CurrencySelectionViewModelType.swift in Sources */,
-				1E833C822C4D16DC000C03E1 /* SelectedCurrencies+CoreDataClass.swift in Sources */,
-				1E833C902C517521000C03E1 /* CurrencyRatesCache+CoreDataClass.swift in Sources */,
 				1E631AA32B5D3BB100464EEC /* Currency.swift in Sources */,
 				1E631AB42B5FC90300464EEC /* AvailableCurrencyCellViewModelType.swift in Sources */,
 				1E833C872C4D50C6000C03E1 /* Logger.swift in Sources */,
 				1E631AB22B5FC8FA00464EEC /* AvailableCurrencyCellViewModel.swift in Sources */,
-				1EC586082C51780B00DE5A18 /* LastFetchTime+CoreDataClass.swift in Sources */,
 				1E833C752C4C210E000C03E1 /* CoreDataManagerType.swift in Sources */,
-				1E631AD72B7E535B00464EEC /* CurrencyNetworkManagerType.swift in Sources */,
+				1E631AD72B7E535B00464EEC /* RatesNetworkManagerType.swift in Sources */,
 				1E631A522B4212D600464EEC /* ConverterViewController.swift in Sources */,
 				1E631AD32B7A85BF00464EEC /* CurrencyData.swift in Sources */,
 				1E631A4E2B4212D600464EEC /* AppDelegate.swift in Sources */,
-				1E631AD12B7A817400464EEC /* CurrencyNetworkManager.swift in Sources */,
+				1E631AD12B7A817400464EEC /* RatesNetworkManager.swift in Sources */,
 				1E631A502B4212D600464EEC /* SceneDelegate.swift in Sources */,
 				1E833C0E2C35D7A1000C03E1 /* ScrollView.swift in Sources */,
 				1E631A702B4216D100464EEC /* UIColor.swift in Sources */,
@@ -480,7 +468,6 @@
 				1E631AD52B7A861500464EEC /* CurrencyRates.swift in Sources */,
 				1E631AAB2B5FC72100464EEC /* CurrencySelectionViewModel.swift in Sources */,
 				1E631A8E2B42192900464EEC /* ConverterViewModelType.swift in Sources */,
-				1E833C912C517521000C03E1 /* CurrencyRatesCache+CoreDataProperties.swift in Sources */,
 				1E631A9F2B559DF700464EEC /* SelectedCurrencyCellViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -750,30 +737,15 @@
 			package = 1E631A722B42178800464EEC /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
 		};
-		1E631A752B42178800464EEC /* SnapKit-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E631A722B42178800464EEC /* XCRemoteSwiftPackageReference "SnapKit" */;
-			productName = "SnapKit-Dynamic";
-		};
 		1E631A782B4217A800464EEC /* RxBlocking */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1E631A772B4217A800464EEC /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxBlocking;
 		};
-		1E631A7A2B4217A800464EEC /* RxBlocking-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E631A772B4217A800464EEC /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = "RxBlocking-Dynamic";
-		};
 		1E631A7C2B4217A800464EEC /* RxCocoa */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1E631A772B4217A800464EEC /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxCocoa;
-		};
-		1E631A7E2B4217A800464EEC /* RxCocoa-Dynamic */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E631A772B4217A800464EEC /* XCRemoteSwiftPackageReference "RxSwift" */;
-			productName = "RxCocoa-Dynamic";
 		};
 		1E631A802B4217A800464EEC /* RxRelay */ = {
 			isa = XCSwiftPackageProductDependency;

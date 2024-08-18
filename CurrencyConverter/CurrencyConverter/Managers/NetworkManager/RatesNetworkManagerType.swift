@@ -7,11 +7,12 @@
 
 import Foundation
 
-protocol CurrencyNetworkManagerType: AnyObject {
+protocol RatesNetworkManagerType: AnyObject {
+    var coreDataManager: CoreDataManagerType { get }
     static var APIKey: String? { get }
     static var URLString: String { get }
-    
-    func fetchCurrentCurrenciesRates() async
-    func fetchData(withURLString URLString: String) async -> Data?
+    var urlSession: URLSession { get }
+
+    func fetchCurrentRates() async
     func parseJSON(withData data: Data) -> CurrencyRates?
 }

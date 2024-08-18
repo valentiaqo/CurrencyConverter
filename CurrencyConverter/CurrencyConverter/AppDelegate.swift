@@ -8,10 +8,15 @@
 import UIKit
 import CoreData
 import OSLog
+import BackgroundTasks
 
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
+    private let backgroundTaskManager: BackgroundTaskManagerType = BackgroundTaskManager()
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        backgroundTaskManager.taskRegistration()
+        
         return true
     }
     
@@ -25,7 +30,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         })
         return container
     }()
-
+    
     // MARK: - Core Data Saving support
     func saveContext () {
         let context = persistentContainer.viewContext
@@ -39,4 +44,3 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 }
-

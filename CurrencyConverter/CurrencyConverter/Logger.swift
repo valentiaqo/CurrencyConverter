@@ -13,5 +13,6 @@ extension Logger {
     
     static let networkManager = Logger(subsystem: subsystem, category: "networkmanager")
     static let coreDataManager = Logger(subsystem: subsystem, category: "coredatamanager")
+    static let backgroundTaskManager = Logger(subsystem: subsystem, category: "backgroundtaskmanager")
 }
 

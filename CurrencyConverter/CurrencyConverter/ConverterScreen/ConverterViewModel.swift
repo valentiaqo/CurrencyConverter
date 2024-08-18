@@ -22,7 +22,7 @@ enum ConversionOption {
 
 final class ConverterViewModel: ConverterViewModelType {
     let router: WeakRouter<UserListRoute>
-    let currencyNetworkManager: CurrencyNetworkManagerType = CurrencyNetworkManager()
+    let currencyNetworkManager: RatesNetworkManagerType = RatesNetworkManager()
     let coreDataManager: CoreDataManagerType = CoreDataManager()
     var selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> = .init(value: [SectionOfCurrency(items: [.usd, .eur, .pln])])
     var selectedTradingOption: TradingOption = .bid
@@ -68,9 +68,14 @@ final class ConverterViewModel: ConverterViewModelType {
     }
     
     func fetchCurrencyRates() {
-        Task {
-           await currencyNetworkManager.fetchCurrentCurrenciesRates()
-            currencyRates = coreDataManager.retrieveCurrencyRatesCache()
+        if let lastFetchTime = coreDataManager.retrieveLastFetchTime(), Date().timeIntervalSince(lastFetchTime) > 3600 {
+            Task {
+                await currencyNetworkManager.fetchCurrentRates()
+            }
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.currencyRates = self.coreDataManager.retrieveCurrencyRatesCache()
         }
     }
     
