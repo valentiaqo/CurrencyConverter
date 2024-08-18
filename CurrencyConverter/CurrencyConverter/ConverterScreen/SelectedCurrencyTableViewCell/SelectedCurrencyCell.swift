@@ -16,7 +16,6 @@ final class SelectedCurrencyCell: UITableViewCell {
     let currencyCodeLabel = UILabel()
     let rightChevronImageView = UIImageView()
     let currencyCodeStackView = UIStackView()
-    
     let amountTextField = UITextField()
     
     var isNewlyAdded = false
@@ -75,6 +74,7 @@ final class SelectedCurrencyCell: UITableViewCell {
         amountTextField.borderStyle = .roundedRect
         amountTextField.layer.cornerRadius = 10
         amountTextField.backgroundColor = .cloudWhite
+        amountTextField.keyboardType = .decimalPad
     }
     
     private func setUpCurrencyCodeStackView() {

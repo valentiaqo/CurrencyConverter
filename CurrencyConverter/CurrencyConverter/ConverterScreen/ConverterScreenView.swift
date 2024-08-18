@@ -91,7 +91,7 @@ final class ConverterScreenView: UIView {
     
     private func setUpUpdateLabels() {
         // lastUpdatedLabel
-        lastUpdateLabel.text = "Last updated"
+        lastUpdateLabel.text = "Lastest update:"
         
         // lastUpdatedLabel and updateTimeLabel
         [lastUpdateLabel, updateTimeLabel].forEach { label in

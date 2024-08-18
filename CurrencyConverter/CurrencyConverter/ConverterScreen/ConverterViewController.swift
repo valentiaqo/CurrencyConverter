@@ -39,12 +39,16 @@ final class ConverterViewController: UIViewController {
         subscribeToCurrenciesTableViewItemDeleted()
         addKeyboardNotificationRxObservers()
         subscribeToLongPressGesture()
+        subscribeToScrollViewWillBeginDragging()
         subscribeToTradeButtonsTapped()
         subscribeToDoneButtonTapped()
         subscribeToAddCurrencyButtonTapped()
         subscribeToBidButtonTapped()
         subscribeToAskButtonTapped()
-        updateTimeLabel()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.updateTimeLabel()
+        }
     }
     
     override func viewWillLayoutSubviews() {
@@ -126,6 +130,19 @@ final class ConverterViewController: UIViewController {
     }
     
     // MARK: - Subscriprions
+    private func subscribeToScrollViewWillBeginDragging() {
+        converterScreenView.scrollView.rx
+            .willBeginDragging
+            .subscribe { [weak self] _ in
+                self?.converterScreenView.converterView.currenciesTableView.visibleCells.forEach { visibleCell in
+                    if (visibleCell as? SelectedCurrencyCell)?.currencyCodeLabel.text == self?.viewModel.editedCurrency?.code {
+                        visibleCell.endEditing(true)
+                    }
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
     private func subscribeToTradeButtonsTapped() {
         converterScreenView.converterView.bidButton.rx
             .tap
@@ -159,7 +176,8 @@ final class ConverterViewController: UIViewController {
             .text
             .orEmpty
             .scan(String(), accumulator: { previousText, newText in
-                cell.disposeBag = DisposeBag()
+//                cell.disposeBag = DisposeBag()
+        
                 return self.makeConversion(for: cell, previousText: previousText, newText: newText)
             })
             .bind(to: cell.amountTextField.rx.text)

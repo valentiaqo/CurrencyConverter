@@ -11,7 +11,7 @@ import XCoordinator
 
 protocol ConverterViewModelType: AnyObject {
     var router: WeakRouter<UserListRoute> { get }
-    var currencyNetworkManager: CurrencyNetworkManagerType { get }
+    var currencyNetworkManager: RatesNetworkManagerType { get }
     var coreDataManager: CoreDataManagerType { get }
     var selectedCurrencies: BehaviorSubject<[SectionOfCurrency]> { get }
     var selectedTradingOption: TradingOption { get set }
