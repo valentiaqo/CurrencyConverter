@@ -6,10 +6,10 @@ CurrencyConverter is an iOS/IpadOS app that allows you to convert between popula
 
 - **Minimum iOS/IpadOS 15**
 - **Landscape/Portrait Orientation**: Enjoy a flexible user interface that adapts to different orientations.
-- **Convert Between Ppular Currencies**: Convert to and from a wide range of currencies.
+- **Convert Between Popular Currencies**: Convert to and from a wide range of currencies.
 - **Online/Offline Functionality**: Works without an internet connection by storing the latest rates locally.
 - **Background Rate Updates**: Updates rates hourly when the app is active.
-- **Favourite Currencies**: Save your favourite currencies for quick access.
+- **Favourite Currencies**: Save your favourite currencies for quick access - the app remembers all the currencies you've selected, even after closing the app.
 
 ## Tech Stack
 
