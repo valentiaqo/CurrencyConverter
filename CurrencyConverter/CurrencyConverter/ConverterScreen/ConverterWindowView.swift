@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxRelay
 
-final class ConverterView: UIView {
+final class ConverterWindowView: UIView {
     let bidButton = UIButton()
     let askButton = UIButton()
     
@@ -22,7 +22,7 @@ final class ConverterView: UIView {
     var isInEditingMode = BehaviorRelay(value: false)
     
     let addCurrencyButton = UIButton()
-    let doneButton = UIButton()
+    let doneButton = UIButton(configuration: .plain())
     let shareButton = UIButton()
     
     let longPressGesture = UILongPressGestureRecognizer()
@@ -222,6 +222,15 @@ final class ConverterView: UIView {
     func toggleTradeButtonsState() {
         askButton.isEnabled.toggle()
         bidButton.isEnabled.toggle()
+    }
+    
+    func toggleTextFieldsEditability() {
+        currenciesTableView.visibleCells.forEach { cell in
+            if let isEnabledState = (cell as? SelectedCurrencyCell)?.amountTextField.isEnabled {
+                (cell as? SelectedCurrencyCell)?.amountTextField.isEnabled = !isEnabledState
+                (cell as? SelectedCurrencyCell)?.colorTextFieldBackground()
+            }
+        }
     }
     
     private func dropShadow() {

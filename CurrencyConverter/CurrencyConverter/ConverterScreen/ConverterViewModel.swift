@@ -34,8 +34,8 @@ final class ConverterViewModel: ConverterViewModelType {
     
     init(router: WeakRouter<UserListRoute>) {
         self.router = router
-        refreshSelectedCurrencies()
         fetchCurrencyRates()
+        refreshSelectedCurrencies()
     }
     
     func addCurrencyButtonPressed() {
@@ -61,6 +61,7 @@ final class ConverterViewModel: ConverterViewModelType {
         var newSelectedCurrencies = sectionOfCurrencies.items
         let deletedCurrency = newSelectedCurrencies.remove(at: indexPath.row)
         
+        currencyRatePairs[deletedCurrency] = String()
         coreDataManager.deleteSelectedCurrency(currencyName: deletedCurrency.code.lowercased())
         
         sectionOfCurrencies.items = newSelectedCurrencies
@@ -68,15 +69,19 @@ final class ConverterViewModel: ConverterViewModelType {
     }
     
     func fetchCurrencyRates() {
-        if let lastFetchTime = coreDataManager.retrieveLastFetchTime(), Date().timeIntervalSince(lastFetchTime) > 3600 {
+        if coreDataManager.retrieveLastFetchTime() == nil || Date().timeIntervalSince(coreDataManager.retrieveLastFetchTime() ?? Date()) > 3600 {
             Task {
-                await currencyNetworkManager.fetchCurrentRates()
+                if let rates = await currencyNetworkManager.fetchCurrentRates() {
+                    coreDataManager.createCurrencyRatesCache(rates: rates)
+                    coreDataManager.createLastFetchTime(currentFetchDate: Date())
+                }
+                currencyRates = coreDataManager.retrieveCurrencyRatesCache()
             }
+        } else {
+            currencyRates = coreDataManager.retrieveCurrencyRatesCache()
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.currencyRates = self.coreDataManager.retrieveCurrencyRatesCache()
-        }
+        NotificationCenter.default.post(name: .ratesFetchCompleted, object: nil)
     }
     
     func refreshSelectedCurrencies() {

@@ -9,7 +9,7 @@ import Foundation
 import BackgroundTasks
 
 protocol BackgroundTaskManagerType: AnyObject {
-    var taskId: String { get }
+    static var taskId: String? { get }
     
     func taskRegistration()
     func handleTask(task: BGAppRefreshTask)

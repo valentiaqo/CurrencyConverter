@@ -8,11 +8,11 @@
 import Foundation
 
 protocol RatesNetworkManagerType: AnyObject {
-    var coreDataManager: CoreDataManagerType { get }
     static var APIKey: String? { get }
     static var URLString: String { get }
-    var urlSession: URLSession { get }
+    var urlSession: URLSession { get set }
 
-    func fetchCurrentRates() async
+    func fetchCurrentRates() async -> CurrencyRates?
+    func fetchCurrentRatesBackground()
     func parseJSON(withData data: Data) -> CurrencyRates?
 }

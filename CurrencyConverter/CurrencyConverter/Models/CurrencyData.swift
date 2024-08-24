@@ -8,12 +8,12 @@
 import Foundation
 
 // MARK: - CurrencyData
-struct CurrencyData: Codable {
+struct CurrencyData: Decodable {
     let quotes: [Quote]
 }
 
 // MARK: - Quote
-struct Quote: Codable {
+struct Quote: Decodable {
     let ask, bid, mid: Double?
     let baseCurrency: String?
     let quoteCurrency: String?

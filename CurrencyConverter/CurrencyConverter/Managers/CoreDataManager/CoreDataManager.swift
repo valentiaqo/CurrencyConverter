@@ -13,26 +13,27 @@ final class CoreDataManager: CoreDataManagerType {
     lazy var context: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     func retrieveSelectedCurrencies() -> [Currency] {
+        var currencies = [Currency]()
+        
         do {
             let fetchedCurrencies = try context.fetch(SelectedCurrency.fetchRequest())
             let chosenCurrencies = fetchedCurrencies.compactMap { $0.chosenCurrency }
             let selectedCurrencies = chosenCurrencies.compactMap { Currency.getCurrency(basedOn: $0) }
             
-            return selectedCurrencies
+            currencies = selectedCurrencies
         } catch {
             Logger.coreDataManager.error("Failed to retrieve SelectedCurrencies: \(error.localizedDescription)")
-            return []
+            currencies = []
         }
+        
+        return currencies
     }
     
     func createSelectedCurrency(currencyName: String) {
         let currencyToAdd = SelectedCurrency(context: context)
         currencyToAdd.chosenCurrency = currencyName
-        do {
-            try context.save()
-        } catch {
-            Logger.coreDataManager.error("Failed to create SelectedCurrencies: \(error.localizedDescription)")
-        }
+        
+        saveContext()
     }
     
     func deleteSelectedCurrency(currencyName: String) {
@@ -43,7 +44,8 @@ final class CoreDataManager: CoreDataManagerType {
                     context.delete(selectedCurrency)
                 }
             }
-            try context.save()
+            
+            saveContext()
         } catch {
             Logger.coreDataManager.error("Failed to delete SelectedCurrencies: \(error.localizedDescription)")
         }
@@ -79,12 +81,7 @@ final class CoreDataManager: CoreDataManagerType {
             quoteToAdd.bid = bid
             quoteToAdd.quoteCurrency = quoteCurrency
         }
-        
-        do {
-            try context.save()
-        } catch {
-            Logger.coreDataManager.error("Failed to create CurrencyRatesCache: \(error.localizedDescription)")
-        }
+        saveContext()
     }
     
     func deleteCurrencyRatesCache() {
@@ -93,7 +90,8 @@ final class CoreDataManager: CoreDataManagerType {
             currencyRates.forEach { currencyRateCache in
                 context.delete(currencyRateCache)
             }
-            try context.save()
+            
+            saveContext()
         } catch {
             Logger.coreDataManager.error("Failed to delete CurrencyRatesCache: \(error.localizedDescription)")
         }
@@ -106,7 +104,7 @@ final class CoreDataManager: CoreDataManagerType {
             return fetchDate
         } catch {
             Logger.coreDataManager.error("Failed to retrieve LastFetchTime: \(error.localizedDescription)")
-           return nil
+            return nil
         }
     }
     
@@ -116,11 +114,7 @@ final class CoreDataManager: CoreDataManagerType {
         let dateToAdd = LastFetchTime(context: context)
         dateToAdd.fetchDate = currentFetchDate
         
-        do {
-            try context.save()
-        } catch {
-            Logger.coreDataManager.error("Failed to create LastFetchTime: \(error.localizedDescription)")
-        }
+        saveContext()
     }
     
     func deleteLastFetchTime() {
@@ -130,9 +124,17 @@ final class CoreDataManager: CoreDataManagerType {
                 context.delete(lastFetchTime)
             }
             
-            try context.save()
+            saveContext()
         } catch {
             Logger.coreDataManager.error("Failed to delete LastFetchTime: \(error.localizedDescription)")
+        }
+    }
+    
+    private func saveContext() {
+        do {
+            try context.save()
+        } catch {
+            Logger.coreDataManager.error("Failed to save context: \(error.localizedDescription)")
         }
     }
 }

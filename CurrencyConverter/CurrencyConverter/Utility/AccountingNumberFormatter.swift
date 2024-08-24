@@ -15,8 +15,8 @@ final class AccountingNumberFormatter: NumberFormatter {
         numberStyle = .decimal
         maximumFractionDigits = 2
         roundingMode = .down
-        groupingSeparator = CharacterConstants.dot
-        decimalSeparator = CharacterConstants.comma
+        groupingSeparator = CharacterConstants.comma
+        decimalSeparator = CharacterConstants.dot
     }
     
     required init?(coder: NSCoder) {

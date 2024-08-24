@@ -28,4 +28,7 @@ extension UIColor {
     
     /// A color object with RGB values of 227/255, 227/255, and 232/255, and an alpha value of 1.0.
     static let silverGray = UIColor(red: 227/255, green: 227/255, blue: 232/255, alpha: 1)
+    
+    /// A color object with RGB values of 240/255, 240/255, and 240/255, and an alpha value of 1.0.
+    static let platinumGray = UIColor(red: 237/255, green: 237/255, blue: 237/255, alpha: 1)
 }

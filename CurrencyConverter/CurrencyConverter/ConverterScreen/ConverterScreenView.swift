@@ -13,11 +13,13 @@ final class ConverterScreenView: UIView {
     
     let ovalLayeredView = UIView()
     let titleLabel = UILabel()
-    let converterView = ConverterView()
+    let converterWindowView = ConverterWindowView()
     
     let lastUpdateLabel = UILabel()
     let updateTimeLabel = UILabel()
     let lastTimeUpdatedVStack = UIStackView()
+    
+    let tapGestureRecognizer = UITapGestureRecognizer()
     
     //MARK: - Inits
     override init(frame: CGRect) {
@@ -43,6 +45,8 @@ final class ConverterScreenView: UIView {
     private func setUpScrollView() {
         scrollView.delaysContentTouches = false
         scrollView.showsVerticalScrollIndicator = false
+        
+        scrollView.addGestureRecognizer(tapGestureRecognizer)
     }
     
     private func setUpOvalLayeredView() {
@@ -117,8 +121,8 @@ final class ConverterScreenView: UIView {
         
         let contentHeight = lastTimeUpdatedVStack.frame.origin.y + lastTimeUpdatedVStack.frame.height
         let scrollViewHeight = scrollView.frame.height
-        let topGapHeight = converterView.frame.origin.y - titleLabel.frame.origin.y - titleLabel.frame.height
-        let bottomGapHeight = lastTimeUpdatedVStack.frame.origin.y - converterView.frame.origin.y - converterView.frame.height
+        let topGapHeight = converterWindowView.frame.origin.y - titleLabel.frame.origin.y - titleLabel.frame.height
+        let bottomGapHeight = lastTimeUpdatedVStack.frame.origin.y - converterWindowView.frame.origin.y - converterWindowView.frame.height
         let contentBottomOffset =  contentHeight + keyboardHeight + topGapHeight + bottomGapHeight - scrollViewHeight
         
         if notification.name == UIResponder.keyboardWillShowNotification && contentBottomOffset > 0 {
@@ -153,7 +157,7 @@ final class ConverterScreenView: UIView {
         insertSubview(ovalLayeredView, at: 0)
         addSubview(scrollView)
         scrollView.addSubview(titleLabel)
-        scrollView.addSubview(converterView)
+        scrollView.addSubview(converterWindowView)
         scrollView.addSubview(lastTimeUpdatedVStack)
     }
     
@@ -188,7 +192,7 @@ final class ConverterScreenView: UIView {
         }
         
         // containerView
-        converterView.snp.makeConstraints { make in
+        converterWindowView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(16).priority(999)
             make.top.equalTo(titleLabel.snp.bottom).offset(16)
@@ -200,7 +204,7 @@ final class ConverterScreenView: UIView {
         
         // lastTimeUpdatedVStack
         lastTimeUpdatedVStack.snp.makeConstraints { make in
-            make.top.equalTo(converterView.snp.bottom).offset(8)
+            make.top.equalTo(converterWindowView.snp.bottom).offset(8)
             make.leading.equalToSuperview().offset(32)
             
             make.width.equalTo(190)

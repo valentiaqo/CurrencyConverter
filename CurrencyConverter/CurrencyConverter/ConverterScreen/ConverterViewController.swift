@@ -20,10 +20,15 @@ final class ConverterViewController: UIViewController {
     init(viewModel: ConverterViewModelType) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleRatesFetchCompleted(_:)), name: .ratesFetchCompleted, object: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - ViewController's lifecycle
@@ -34,27 +39,30 @@ final class ConverterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
         bindSelectedCurrenciesToTableView()
         subscribeToCurrenciesTableViewItemMoved()
         subscribeToCurrenciesTableViewItemDeleted()
         addKeyboardNotificationRxObservers()
         subscribeToLongPressGesture()
         subscribeToScrollViewWillBeginDragging()
+        subscribeToTapGestureRecognizer()
         subscribeToTradeButtonsTapped()
         subscribeToDoneButtonTapped()
         subscribeToAddCurrencyButtonTapped()
         subscribeToBidButtonTapped()
         subscribeToAskButtonTapped()
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.updateTimeLabel()
-        }
+        updateTimeLabel()
     }
     
     override func viewWillLayoutSubviews() {
-        converterScreenView.converterView.layoutIfNeeded()
+        converterScreenView.converterWindowView.layoutIfNeeded()
     }
-
+    
+    @objc func handleRatesFetchCompleted(_ notification: Notification) {
+        updateTimeLabel()
+    }
+    
     private func appendCellIfNotPresent(_ cell: SelectedCurrencyCell) {
         guard let cellCurrency = currencyFrom(cell), viewModel.currencyRatePairs[cellCurrency] == nil else { return }
         viewModel.currencyRatePairs[cellCurrency] = String()
@@ -80,21 +88,19 @@ final class ConverterViewController: UIViewController {
             viewModel.editedCurrency = cellCurrency
             acceptedText = viewModel.currencyRatePairs[cellCurrency].orEmpty
             viewModel.currencyRatePairs[cellCurrency] = numberFormatter.textWithourGroupingSeparators(viewModel.currencyRatePairs[cellCurrency].orEmpty)
-            populateCurrencyRatesInVisibleCells()
-            return acceptedText
+            populateDataInVisibleCells()
         } else if viewModel.editedCurrency == cellCurrency || (viewModel.editedCurrency != cellCurrency && cell.amountTextField.isEditing) {
             viewModel.editedCurrency = cellCurrency
             viewModel.currencyRatePairs[cellCurrency] = acceptedText
             viewModel.convertRates(baseCurrency: cellCurrency, baseValue: cell.amountTextField.text.orEmpty)
-            populateCurrencyRatesInVisibleCells()
-            return acceptedText
-        } else {
-            return acceptedText
+            populateDataInVisibleCells()
         }
+        
+        return acceptedText
     }
     
-    private func populateCurrencyRatesInVisibleCells() {
-        converterScreenView.converterView.currenciesTableView.visibleCells.forEach { cell in
+    private func populateDataInVisibleCells() {
+        converterScreenView.converterWindowView.currenciesTableView.visibleCells.forEach { cell in
             guard let cell = (cell as? SelectedCurrencyCell), let editedCurrency = viewModel.editedCurrency else { return }
             
             viewModel.currencyRatePairs.forEach { currency, rate in
@@ -104,6 +110,7 @@ final class ConverterViewController: UIViewController {
                     if viewModel.currencyRatePairs[editedCurrency] == String() {
                         cell.amountTextField.text = String()
                         viewModel.currencyRatePairs[currency] = String()
+                    
                     }
                 }
             }
@@ -134,39 +141,50 @@ final class ConverterViewController: UIViewController {
         converterScreenView.scrollView.rx
             .willBeginDragging
             .subscribe { [weak self] _ in
-                self?.converterScreenView.converterView.currenciesTableView.visibleCells.forEach { visibleCell in
-                    if (visibleCell as? SelectedCurrencyCell)?.currencyCodeLabel.text == self?.viewModel.editedCurrency?.code {
-                        visibleCell.endEditing(true)
-                    }
-                }
+                self?.converterScreenView.converterWindowView.endEditing(true)
             }
             .disposed(by: disposeBag)
     }
     
+    private func subscribeToTapGestureRecognizer() {
+        converterScreenView.tapGestureRecognizer.rx
+            .event
+            .subscribe { [weak self] _ in
+                self?.converterScreenView.converterWindowView.endEditing(true)
+            }
+            .disposed(by: disposeBag)
+        
+    }
+    
     private func subscribeToTradeButtonsTapped() {
-        converterScreenView.converterView.bidButton.rx
+        converterScreenView.converterWindowView.bidButton.rx
             .tap
             .subscribe(onNext: { [weak self] _ in
-                self?.converterScreenView.converterView.animateLayerMotion(x: 0)
-                self?.converterScreenView.converterView.toggleTradeButtonsState()
+                self?.converterScreenView.converterWindowView.animateLayerMotion(x: 0)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self?.converterScreenView.converterWindowView.toggleTradeButtonsState()
+                }
             })
             .disposed(by: disposeBag)
         
-        converterScreenView.converterView.askButton.rx
+        converterScreenView.converterWindowView.askButton.rx
             .tap
             .subscribe(onNext: { [weak self] _ in
-                self?.converterScreenView.converterView.animateLayerMotion(x: self?.converterScreenView.converterView.calculateLayerWidth() ?? 0)
-                self?.converterScreenView.converterView.toggleTradeButtonsState()
+                self?.converterScreenView.converterWindowView.animateLayerMotion(x: self?.converterScreenView.converterWindowView.calculateLayerWidth() ?? 0)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    self?.converterScreenView.converterWindowView.toggleTradeButtonsState()
+                }
             })
             .disposed(by: disposeBag)
     }
     
     private func subscribeToDoneButtonTapped() {
-        converterScreenView.converterView.doneButton.rx
+        converterScreenView.converterWindowView.doneButton.rx
             .tap
             .subscribe { [weak self] _ in
-                self?.converterScreenView.converterView.isInEditingMode.accept(false)
-                self?.converterScreenView.converterView.swapAddAndTradeButtonsVisability()
+                self?.converterScreenView.converterWindowView.isInEditingMode.accept(false)
+                self?.converterScreenView.converterWindowView.toggleTextFieldsEditability()
+                self?.converterScreenView.converterWindowView.swapAddAndTradeButtonsVisability()
             }
             .disposed(by: disposeBag)
     }
@@ -176,8 +194,11 @@ final class ConverterViewController: UIViewController {
             .text
             .orEmpty
             .scan(String(), accumulator: { previousText, newText in
-//                cell.disposeBag = DisposeBag()
-        
+                
+//                defer {
+//                    print(self.viewModel.currencyRatePairs)
+//                    print("/")
+//                }
                 return self.makeConversion(for: cell, previousText: previousText, newText: newText)
             })
             .bind(to: cell.amountTextField.rx.text)
@@ -185,16 +206,18 @@ final class ConverterViewController: UIViewController {
     }
     
     private func subscribeToLongPressGesture() {
-        converterScreenView.converterView.longPressGesture.rx
+        converterScreenView.converterWindowView.longPressGesture.rx
             .event
             .subscribe(onNext: { [weak self] gesture in
                 guard let self else { return }
                 
-                if !converterScreenView.converterView.addCurrencyButton.isHidden {
+                if !converterScreenView.converterWindowView.addCurrencyButton.isHidden {
                     switch gesture.state {
                     case .began:
-                        converterScreenView.converterView.isInEditingMode.accept(true)
-                        converterScreenView.converterView.swapAddAndTradeButtonsVisability()
+                        converterScreenView.converterWindowView.isInEditingMode.accept(true)
+                        converterScreenView.converterWindowView.endEditing(true)
+                        converterScreenView.converterWindowView.toggleTextFieldsEditability()
+                        converterScreenView.converterWindowView.swapAddAndTradeButtonsVisability()
                     default:
                         break
                     }
@@ -204,7 +227,7 @@ final class ConverterViewController: UIViewController {
     }
     
     private func subscribeToCurrenciesTableViewItemMoved() {
-        converterScreenView.converterView.currenciesTableView.rx
+        converterScreenView.converterWindowView.currenciesTableView.rx
             .itemMoved
             .subscribe { sourceIndexPath, destinationIndexPath in
                 self.viewModel.rearrangeCurrencyPosition(sourceIndexPath: sourceIndexPath,
@@ -214,10 +237,10 @@ final class ConverterViewController: UIViewController {
     }
     
     private func subscribeToCurrenciesTableViewItemDeleted() {
-        converterScreenView.converterView.currenciesTableView.rx
+        converterScreenView.converterWindowView.currenciesTableView.rx
             .itemDeleted
             .subscribe { [weak self] indexPath in
-                guard let self = self, let cell = self.converterScreenView.converterView.currenciesTableView.cellForRow(at: indexPath) as? SelectedCurrencyCell else { return }
+                guard let self = self, let cell = self.converterScreenView.converterWindowView.currenciesTableView.cellForRow(at: indexPath) as? SelectedCurrencyCell else { return }
                 self.viewModel.deleteCurrency(at: indexPath)
                 self.deleteCellIfPresent(cell)
             }
@@ -225,34 +248,35 @@ final class ConverterViewController: UIViewController {
     }
     
     private func subscribeToAddCurrencyButtonTapped() {
-        converterScreenView.converterView.addCurrencyButton.rx
+        converterScreenView.converterWindowView.addCurrencyButton.rx
             .tap
             .subscribe { [weak self] _ in
+                self?.converterScreenView.converterWindowView.endEditing(true)
                 self?.viewModel.addCurrencyButtonPressed()
             }
             .disposed(by: disposeBag)
     }
     
     private func subscribeToBidButtonTapped() {
-        converterScreenView.converterView.bidButton.rx
+        converterScreenView.converterWindowView.bidButton.rx
             .tap
             .subscribe { [weak self] _ in
                 guard let editedCurrency = self?.viewModel.editedCurrency, let rate = self?.viewModel.currencyRatePairs[editedCurrency] else { return }
                 self?.viewModel.selectedTradingOption = .bid
                 self?.viewModel.convertRates(baseCurrency: editedCurrency, baseValue: rate)
-                self?.populateCurrencyRatesInVisibleCells()
+                self?.populateDataInVisibleCells()
             }
             .disposed(by: disposeBag)
     }
     
     private func subscribeToAskButtonTapped() {
-        converterScreenView.converterView.askButton.rx
+        converterScreenView.converterWindowView.askButton.rx
             .tap
             .subscribe { [weak self] _ in
                 guard let editedCurrency = self?.viewModel.editedCurrency, let rate = self?.viewModel.currencyRatePairs[editedCurrency] else { return }
                 self?.viewModel.selectedTradingOption = .ask
                 self?.viewModel.convertRates(baseCurrency: editedCurrency, baseValue: rate)
-                self?.populateCurrencyRatesInVisibleCells()
+                self?.populateDataInVisibleCells()
             }
             .disposed(by: disposeBag)
     }
@@ -267,7 +291,7 @@ extension ConverterViewController {
             else { return UITableViewCell() }
             
             cell.viewModel = viewModel.cellViewModel(currency: currency)
-            cell.animateConstraintsWhenEditing(converterScreenView.converterView.isInEditingMode.value)
+            cell.animateConstraintsWhenEditing(converterScreenView.converterWindowView.isInEditingMode.value)
             prepareCellIfNewlyAdded(cell)
             
             if let cellCurrency = currencyFrom(cell), let rate = viewModel.currencyRatePairs[cellCurrency] {
@@ -286,7 +310,7 @@ extension ConverterViewController {
     
     private func bindSelectedCurrenciesToTableView() {
         viewModel.selectedCurrencies
-            .bind(to: converterScreenView.converterView.currenciesTableView.rx.items(dataSource: tableViewDataSource()))
+            .bind(to: converterScreenView.converterWindowView.currenciesTableView.rx.items(dataSource: tableViewDataSource()))
             .disposed(by: disposeBag)
     }
 }

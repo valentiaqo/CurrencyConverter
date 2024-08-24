@@ -52,7 +52,12 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "API_KEY"
-            value = "tkwacul6zkGNxEA3slMZ"
+            value = "H00QqUfu6XVrEbF7Rq4j"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "BG_TASK_IDENTIFIER"
+            value = "valentynponomarenko.CurrencyConverter.backgroundTask"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

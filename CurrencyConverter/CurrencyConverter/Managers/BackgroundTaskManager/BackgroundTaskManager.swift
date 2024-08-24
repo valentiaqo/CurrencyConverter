@@ -10,17 +10,16 @@ import OSLog
 import BackgroundTasks
 
 final class BackgroundTaskManager: NSObject, BackgroundTaskManagerType {
-    let ratesNetworkManager: RatesNetworkManagerType = RatesNetworkManager(fetchType: .background)
+    let ratesNetworkManager: RatesNetworkManagerType = RatesNetworkManager()
+    let coreDataManager: CoreDataManagerType = CoreDataManager()
     
-    let taskId = "valentynponomarenko.CurrencyConverter.backgroundTask"
+    static let taskId = ProcessInfo.processInfo.environment["BG_TASK_IDENTIFIER"]
     var refreshTask: BGAppRefreshTask?
-    
-    // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateLaunchForTaskWithIdentifier:@"valentynponomarenko.CurrencyConverter.backgroundTask"]
-    // e -l objc -- (void)[[BGTaskScheduler sharedScheduler] _simulateExpirationForTaskWithIdentifier:@"valentynponomarenko.CurrencyConverter.backgroundTask"]
-    
+
     override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(handleRatesFetchCompleted(_:)), name: .ratesFetchCompleted, object: nil)
+        ratesNetworkManager.urlSession = URLSession(configuration: URLSessionConfiguration.background(withIdentifier: BackgroundTaskManager.taskId.orEmpty), delegate: self, delegateQueue: nil)
     }
 
     deinit {
@@ -28,17 +27,11 @@ final class BackgroundTaskManager: NSObject, BackgroundTaskManagerType {
     }
     
     @objc func handleRatesFetchCompleted(_ notification: Notification) {
-        guard let success = notification.userInfo?["success"] as? Bool else {
-            refreshTask?.setTaskCompleted(success: false)
-            Logger.backgroundTaskManager.error("Failed to find \"success\" notification")
-            return
-        }
-        
-        refreshTask?.setTaskCompleted(success: success)
+        refreshTask?.setTaskCompleted(success: true)
     }
     
     func taskRegistration() {
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: taskId, using: nil) { task in
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: BackgroundTaskManager.taskId.orEmpty, using: nil) { task in
             guard let task = task as? BGAppRefreshTask else { return }
             self.handleTask(task: task)
         }
@@ -50,12 +43,10 @@ final class BackgroundTaskManager: NSObject, BackgroundTaskManagerType {
         task.expirationHandler = {
             self.ratesNetworkManager.urlSession.invalidateAndCancel()
             task.setTaskCompleted(success: false)
-            Logger.backgroundTaskManager.error("Application time in the background expired")
+            Logger.backgroundTaskManager.error("Application time in the background has expired")
         }
         
-        Task {
-            await ratesNetworkManager.fetchCurrentRates()
-        }
+        ratesNetworkManager.fetchCurrentRatesBackground()
         
         scheduleTask()
     }
@@ -63,12 +54,25 @@ final class BackgroundTaskManager: NSObject, BackgroundTaskManagerType {
     func scheduleTask() {
         BGTaskScheduler.shared.getPendingTaskRequests { requests in
             do {
-                let newTask = BGAppRefreshTaskRequest(identifier: self.taskId)
+                let newTask = BGAppRefreshTaskRequest(identifier: BackgroundTaskManager.taskId.orEmpty)
                 newTask.earliestBeginDate = Date(timeIntervalSinceNow: 3600)
                 try BGTaskScheduler.shared.submit(newTask)
             } catch {
                 Logger.backgroundTaskManager.error("Failed to schedule a task: \(error.localizedDescription)")
             }
+        }
+    }
+}
+
+// MARK: - URLSessionDataTask
+extension BackgroundTaskManager: URLSessionDataDelegate {
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        guard let currentRates = ratesNetworkManager.parseJSON(withData: data) else { return }
+        
+        DispatchQueue.main.async {
+            self.coreDataManager.createCurrencyRatesCache(rates: currentRates)
+            self.coreDataManager.createLastFetchTime(currentFetchDate: Date())
+            NotificationCenter.default.post(name: .ratesFetchCompleted, object: nil)
         }
     }
 }

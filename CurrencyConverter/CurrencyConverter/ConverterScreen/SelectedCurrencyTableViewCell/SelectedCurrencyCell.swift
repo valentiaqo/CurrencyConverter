@@ -86,6 +86,10 @@ final class SelectedCurrencyCell: UITableViewCell {
         currencyCodeStackView.spacing = 0
     }
     
+    func colorTextFieldBackground() {
+        amountTextField.isEnabled == true ? (amountTextField.backgroundColor = .cloudWhite) : (amountTextField.backgroundColor = .platinumGray)
+    }
+    
     // MARK: - Constraints
     private func addSubviews() {
         addSubview(currencyCodeStackView)
@@ -102,7 +106,6 @@ final class SelectedCurrencyCell: UITableViewCell {
                 self.amountTextField.snp.updateConstraints { make in
                     make.trailing.equalToSuperview().inset(64)
                 }
-                self.layoutIfNeeded()
             } else {
                 self.currencyCodeStackView.snp.updateConstraints { make in
                     make.leading.equalToSuperview().inset(32)
@@ -111,6 +114,7 @@ final class SelectedCurrencyCell: UITableViewCell {
                     make.trailing.equalToSuperview().inset(32)
                 }
             }
+            self.layoutIfNeeded()
         }
     }
     

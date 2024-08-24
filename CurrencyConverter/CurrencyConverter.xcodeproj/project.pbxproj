@@ -28,7 +28,7 @@
 		1E631A8A2B42190600464EEC /* ConverterScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A892B42190600464EEC /* ConverterScreenView.swift */; };
 		1E631A8C2B42191C00464EEC /* ConverterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A8B2B42191C00464EEC /* ConverterViewModel.swift */; };
 		1E631A8E2B42192900464EEC /* ConverterViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A8D2B42192900464EEC /* ConverterViewModelType.swift */; };
-		1E631A932B47EA5E00464EEC /* ConverterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A922B47EA5E00464EEC /* ConverterView.swift */; };
+		1E631A932B47EA5E00464EEC /* ConverterWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A922B47EA5E00464EEC /* ConverterWindowView.swift */; };
 		1E631A9B2B559B1500464EEC /* SelectedCurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A9A2B559B1500464EEC /* SelectedCurrencyCell.swift */; };
 		1E631A9F2B559DF700464EEC /* SelectedCurrencyCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631A9E2B559DF700464EEC /* SelectedCurrencyCellViewModel.swift */; };
 		1E631AA12B559DFF00464EEC /* SelectedCurrencyCellViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E631AA02B559DFF00464EEC /* SelectedCurrencyCellViewModelType.swift */; };
@@ -80,7 +80,7 @@
 		1E631A892B42190600464EEC /* ConverterScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterScreenView.swift; sourceTree = "<group>"; };
 		1E631A8B2B42191C00464EEC /* ConverterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterViewModel.swift; sourceTree = "<group>"; };
 		1E631A8D2B42192900464EEC /* ConverterViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterViewModelType.swift; sourceTree = "<group>"; };
-		1E631A922B47EA5E00464EEC /* ConverterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterView.swift; sourceTree = "<group>"; };
+		1E631A922B47EA5E00464EEC /* ConverterWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterWindowView.swift; sourceTree = "<group>"; };
 		1E631A9A2B559B1500464EEC /* SelectedCurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCurrencyCell.swift; sourceTree = "<group>"; };
 		1E631A9E2B559DF700464EEC /* SelectedCurrencyCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCurrencyCellViewModel.swift; sourceTree = "<group>"; };
 		1E631AA02B559DFF00464EEC /* SelectedCurrencyCellViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCurrencyCellViewModelType.swift; sourceTree = "<group>"; };
@@ -224,7 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				1E631A9D2B559C3700464EEC /* SelectedCurrencyTableViewCell */,
-				1E631A922B47EA5E00464EEC /* ConverterView.swift */,
+				1E631A922B47EA5E00464EEC /* ConverterWindowView.swift */,
 				1E631A892B42190600464EEC /* ConverterScreenView.swift */,
 				1E631A512B4212D600464EEC /* ConverterViewController.swift */,
 				1E631A8B2B42191C00464EEC /* ConverterViewModel.swift */,
@@ -446,7 +446,7 @@
 				1EBAA8742C6E280C00DBCEAC /* Notification.swift in Sources */,
 				1E631AA92B5FC63200464EEC /* CurrencySelectionView.swift in Sources */,
 				1E631AA12B559DFF00464EEC /* SelectedCurrencyCellViewModelType.swift in Sources */,
-				1E631A932B47EA5E00464EEC /* ConverterView.swift in Sources */,
+				1E631A932B47EA5E00464EEC /* ConverterWindowView.swift in Sources */,
 				1E631A8A2B42190600464EEC /* ConverterScreenView.swift in Sources */,
 				1E631ACE2B77BF3400464EEC /* AccountingNumberFormatter.swift in Sources */,
 				1E631AAD2B5FC72900464EEC /* CurrencySelectionViewModelType.swift in Sources */,
@@ -626,6 +626,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -656,6 +657,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
