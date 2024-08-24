@@ -1,3 +1,5 @@
+
+https://github.com/user-attachments/assets/da64fb72-bba7-4ce8-9c77-154939bacf9d
 # CurrencyConverter
 
 CurrencyConverter is an iOS/IpadOS app that allows you to convert between popular currencies. It works both online and offline, with automatic updates to keep your rates accurate.
@@ -24,3 +26,18 @@ CurrencyConverter is an iOS/IpadOS app that allows you to convert between popula
 - **URLSession**: Network tasks for downloading and uploading data.
 - **async/await**: Concurrency model for managing asynchronous code.
 - **SnapKit**: UI creation and layout entirely in code for a dynamic interface.
+
+
+https://github.com/user-attachments/assets/e242adef-1c52-40e8-88e0-9099ac9da008
+
+
+https://github.com/user-attachments/assets/478329c8-71ba-4bf0-90e5-6313dd026009
+
+
+https://github.com/user-attachments/assets/f3dfe314-05c5-4e0e-a1e3-3e28e6bb9135
+
+
+https://github.com/user-attachments/assets/cc0ea04b-3808-4de4-a22f-9f251ef0db3c
+
+
+
