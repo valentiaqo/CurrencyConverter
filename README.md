@@ -25,17 +25,17 @@ CurrencyConverter is an iOS/IpadOS app that allows you to convert between popula
 - **async/await**: Concurrency model for managing asynchronous code.
 - **SnapKit**: UI creation and layout entirely in code for a dynamic interface.
 
-
-https://github.com/user-attachments/assets/e242adef-1c52-40e8-88e0-9099ac9da008
-
-
-https://github.com/user-attachments/assets/478329c8-71ba-4bf0-90e5-6313dd026009
+https://github.com/user-attachments/assets/a891552e-fc9b-453a-8e08-150c58256f92
 
 
-https://github.com/user-attachments/assets/f3dfe314-05c5-4e0e-a1e3-3e28e6bb9135
+
+https://github.com/user-attachments/assets/054ecbbf-43c2-4eeb-b1bc-d6f8d28aa48a
 
 
-https://github.com/user-attachments/assets/cc0ea04b-3808-4de4-a22f-9f251ef0db3c
+
+https://github.com/user-attachments/assets/03f8cd03-9bc2-4589-86c2-1beaba393e2f
 
 
+
+https://github.com/user-attachments/assets/ca27799f-eb0e-4154-af03-afc4143f9d7b
 
