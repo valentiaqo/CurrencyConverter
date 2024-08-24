@@ -1,5 +1,3 @@
-
-https://github.com/user-attachments/assets/da64fb72-bba7-4ce8-9c77-154939bacf9d
 # CurrencyConverter
 
 CurrencyConverter is an iOS/IpadOS app that allows you to convert between popular currencies. It works both online and offline, with automatic updates to keep your rates accurate.
