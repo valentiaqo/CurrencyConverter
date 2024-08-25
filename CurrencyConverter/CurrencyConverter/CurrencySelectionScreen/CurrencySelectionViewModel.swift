@@ -44,6 +44,10 @@ final class CurrencySelectionViewModel: CurrencySelectionViewModelType {
         filteredCurrencies.accept(alphabeticallySorted2DArray)
     }
     
+    func tableViewItemSelected(currencyName: String) {
+        router.trigger(.unwindToConverter(currencyName))
+    }
+    
     func cellViewModel(currency: Currency) -> AvailableCurrencyCellViewModelType {
         return AvailableCurrencyCellViewModel(currency: currency)
     }

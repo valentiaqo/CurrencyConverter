@@ -16,5 +16,6 @@ protocol CurrencySelectionViewModelType: AnyObject {
     var filteredCurrencies: BehaviorRelay<[SectionOfCurrency]> { get set }
     
     func updateFilteredCurrenciesWithSearchText(_ searchText: String)
+    func tableViewItemSelected(currencyName: String)
     func cellViewModel(currency: Currency) -> AvailableCurrencyCellViewModelType
 }

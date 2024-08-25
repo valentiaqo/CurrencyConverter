@@ -85,31 +85,37 @@ final class CurrencySelectionViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    private func subscribeToCurrenciesTableViewItemSelected() {
+    private func subscribeToCurrenciesTableViewItemSelected1() {
         currencySelectionView.availableCurrenciesTableView.rx
             .itemSelected
             .subscribe { indexPath in
                 guard let converterViewController = (self.navigationController?.viewControllers.first as? ConverterViewController),
                       let cell = self.currencySelectionView.availableCurrenciesTableView.cellForRow(at: indexPath) as? AvailableCurrencyCell,
                       let currencyName = cell.currencyNameLabel.text else { return }
-                
-                var newAvailableCurrencies = self.viewModel.filteredCurrencies.value
+
                 
                 if let selectedCurrency = Currency.getCurrency(basedOn: currencyName),
                     var newSelectedCurrencies = try? converterViewController.viewModel.selectedCurrencies.value().first?.items {
                     newSelectedCurrencies.append(selectedCurrency)
-                    
-                    newAvailableCurrencies.indices.forEach { index in
-                        newAvailableCurrencies[index].items.removeAll { $0 == selectedCurrency }
-                    }
-                    
-                    self.viewModel.filteredCurrencies.accept(newAvailableCurrencies)
+
                     self.viewModel.coreDataManager.createSelectedCurrency(currencyName: currencyName.truncated(to: 3).lowercased())
                     
                     converterViewController.viewModel.refreshSelectedCurrencies()
                 }
                 
                 self.navigationController?.popViewController(animated: true)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func subscribeToCurrenciesTableViewItemSelected() {
+        currencySelectionView.availableCurrenciesTableView.rx
+            .itemSelected
+            .subscribe { indexPath in
+                guard let cell = self.currencySelectionView.availableCurrenciesTableView.cellForRow(at: indexPath) as? AvailableCurrencyCell,
+                        let currencyName = cell.currencyNameLabel.text else { return }
+                
+                self.viewModel.tableViewItemSelected(currencyName: currencyName)
             }
             .disposed(by: disposeBag)
     }

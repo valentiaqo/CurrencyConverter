@@ -39,7 +39,7 @@ final class ConverterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         bindSelectedCurrenciesToTableView()
         subscribeToCurrenciesTableViewItemMoved()
         subscribeToCurrenciesTableViewItemDeleted()
@@ -103,15 +103,15 @@ final class ConverterViewController: UIViewController {
         converterScreenView.converterWindowView.currenciesTableView.visibleCells.forEach { cell in
             guard let cell = (cell as? SelectedCurrencyCell), let editedCurrency = viewModel.editedCurrency else { return }
             
+            print(viewModel.currencyRatePairs)
             viewModel.currencyRatePairs.forEach { currency, rate in
                 if Currency.getCurrency(basedOn: cell.currencyCodeLabel.text.orEmpty) == currency {
                     cell.amountTextField.text = AccountingNumberFormatter().applyTextFieldTextFormat(for: cell.amountTextField, previousText: rate, currentText: rate)
-                    
-                    if viewModel.currencyRatePairs[editedCurrency] == String() {
-                        cell.amountTextField.text = String()
-                        viewModel.currencyRatePairs[currency] = String()
-                    
-                    }
+                }
+                
+                if viewModel.currencyRatePairs[editedCurrency] == String() {
+                    cell.amountTextField.text = String()
+                    viewModel.currencyRatePairs[currency] = String()
                 }
             }
         }
@@ -194,11 +194,6 @@ final class ConverterViewController: UIViewController {
             .text
             .orEmpty
             .scan(String(), accumulator: { previousText, newText in
-                
-//                defer {
-//                    print(self.viewModel.currencyRatePairs)
-//                    print("/")
-//                }
                 return self.makeConversion(for: cell, previousText: previousText, newText: newText)
             })
             .bind(to: cell.amountTextField.rx.text)
